@@ -1,9 +1,17 @@
 # Mensajes-Secretos
+Esta aplicación permite cifrar mensajes secretos para ser enviados y que no
+puedan ser descifrados, a excepción de ser el destinatario del mensaje.
 
-# Grupo Codeo 🖥️
+Este programa permitirá encriptar un mensaje utilizando algoritmos criptográficos simples como cifrado César y cifrado Atbash.
+
+## Grupo Codeo 🖥️
 
 *Integrantes:*
-Joaquin Osorio, 
-Diego Lopez, 
-Jennifer Mota y
-Oscar Ferreyra
+
+- Joaquin Osorio
+
+- Diego Lopez
+
+- Jennifer Mota
+
+- Oscar Ferreyra
