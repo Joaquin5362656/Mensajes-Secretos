@@ -55,5 +55,15 @@ clave = 3
 print(detectar_caracter(caracter, clave))"""
 
 
-def descifrar_string():
+def descifrar_string(string,clave):
     
+    string_result = ''
+    for caracter in string:
+        new_caracter = detectar_caracter(caracter, clave)
+        string_result += new_caracter
+    
+    return string_result
+
+string = 'Hola mundo"##$ 12'
+clave = 3
+print(descifrar_string(string,clave))
