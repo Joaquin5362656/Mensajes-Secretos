@@ -1,8 +1,8 @@
 # Mensajes-Secretos
 
-Grupo Codeo
+# Grupo Codeo 🖥️
 
-Integrantes:
+*Integrantes:*
 Joaquin Osorio, 
 Diego Lopez, 
 Jennifer Mota y
