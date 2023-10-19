@@ -7,34 +7,20 @@ B = 9
 
 def cifrar_may(caracter, clave):
     posicion = ABECEDARIO_MAY.find(caracter)
-    new_position = posicion + clave
-    if new_position <= A:
-        new_caracter = ABECEDARIO_MAY[new_position]
-    else:
-        new_caracter = ABECEDARIO_MAY[new_position - A - 1]
-
-    return new_caracter
+    new_position = (posicion + clave) % len(ABECEDARIO_MAY)
+    return ABECEDARIO_MAY[new_position]
 
 
 def cifrar_min(caracter, clave):
     posicion = ABECEDARIO_MIN.find(caracter)
-    new_position = posicion + clave
-    if new_position <= A:
-        new_caracter = ABECEDARIO_MIN[new_position]
-    else:
-        new_caracter = ABECEDARIO_MIN[new_position - A - 1]
+    new_position = (posicion + clave) % len(ABECEDARIO_MIN)
+    return ABECEDARIO_MIN[new_position]
 
-    return new_caracter
 
 def cifrar_num(caracter, clave):
     posicion = NUMEROS.find(caracter)
-    new_position = posicion + clave
-    if new_position <= B:
-        new_caracter = NUMEROS[new_position]
-    else:
-        new_caracter = NUMEROS[new_position - B - 1]
-
-    return new_caracter
+    new_position = (posicion + clave) % len(NUMEROS)
+    return NUMEROS[new_position]
     
 
 
@@ -49,10 +35,6 @@ def detectar_caracter(caracter, clave):
         new_caracter = caracter
 
     return new_caracter
-
-"""caracter = '0'
-clave = 10
-print(detectar_caracter(caracter, clave))"""
 
 
 def descifrar_string(string,clave):
@@ -82,8 +64,8 @@ def descifrar_string(string,clave):
     >>> descifrar_string("AbZ", -1)
     'ZaY'
 
-    >>> descifrar_string("XWER 121 $%&//%/ Aadsf", 18)
-    'OÑVJ 909 $%&//%/ Rrukw'
+    >>> descifrar_string("XWER 121 $%&//%/ Aadsf", 20)
+    'QPXL 121 $%&//%/ Ttwmy'
 
     >>> descifrar_string("ASD __adsaUU1", -4)
     'WOZ __wzowQQ7'
