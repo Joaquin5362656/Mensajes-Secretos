@@ -37,37 +37,37 @@ def detectar_caracter(caracter, clave):
     return new_caracter
 
 
-def descifrar_string(string,clave):
+def cifrar_string(string,clave):
 
     """
-    >>> descifrar_string("521", 3)
+    >>> cifrar_string("521", 3)
     '854'
 
-    >>> descifrar_string("521ad", 1)
+    >>> cifrar_string("521ad", 1)
     '632be'
 
-    >>> descifrar_string("aeiu", 0)
+    >>> cifrar_string("aeiu", 0)
     'aeiu'
 
-    >>> descifrar_string("AI120", 10)
+    >>> cifrar_string("AI120", 10)
     'KR120'
 
-    >>> descifrar_string("1  2 32AH", 2)
+    >>> cifrar_string("1  2 32AH", 2)
     '3  4 54CJ'
 
-    >>> descifrar_string("###", -1)
+    >>> cifrar_string("###", -1)
     '###'
 
-    >>> descifrar_string("52", -1)
+    >>> cifrar_string("52", -1)
     '41'
 
-    >>> descifrar_string("AbZ", -1)
+    >>> cifrar_string("AbZ", -1)
     'ZaY'
 
-    >>> descifrar_string("XWER 121 $%&//%/ Aadsf", 20)
+    >>> cifrar_string("XWER 121 $%&//%/ Aadsf", 20)
     'QPXL 121 $%&//%/ Ttwmy'
 
-    >>> descifrar_string("ASD __adsaUU1", -4)
+    >>> cifrar_string("ASD __adsaUU1", -4)
     'WOZ __wzowQQ7'
     """
     
