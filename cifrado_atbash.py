@@ -27,7 +27,6 @@ def cifrado_atbash(texto):
 
     for letra in texto:
         if letra in ORIGINAL_MINUSCULA:
-            # Identifica la posición de cada letra
             indice = ORIGINAL_MINUSCULA.index(letra)
             texto_cifrado += CLAVE_MAYUSCULA [indice]
 
