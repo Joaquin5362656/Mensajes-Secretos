@@ -2,8 +2,7 @@
 ABECEDARIO_MIN = 'abcdefghijklmnñopqrstuvwxyz'
 ABECEDARIO_MAY = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'
 NUMEROS = '1234567890'
-A = 26
-B = 9
+
 
 def cifrar_may(caracter, clave):
     posicion = ABECEDARIO_MAY.find(caracter)
@@ -46,8 +45,8 @@ def cifrar_string(string,clave):
     >>> cifrar_string("521ad", 1)
     '632be'
 
-    >>> cifrar_string("aeiu", 0)
-    'aeiu'
+    >>> cifrar_string("632be", -1)
+    '521ad'
 
     >>> cifrar_string("AI120", 10)
     'KR120'
