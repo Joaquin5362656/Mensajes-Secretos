@@ -22,6 +22,9 @@ def cifrado_atbash(texto):
 
     >>> cifrado_atbash("SlOz 1 NFMwl -")
     'hOlA 1 munDO -'
+
+    >>> cifrado_atbash("sloz nfmwl")
+    'HOLA MUNDO'
     """
     texto_cifrado = ""
 
