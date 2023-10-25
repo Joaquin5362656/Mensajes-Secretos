@@ -22,12 +22,14 @@ def cifrado_atbash(texto):
 
     >>> cifrado_atbash("SlOz 1 NFMwl -")
     'hOlA 1 munDO -'
+
+    >>> cifrado_atbash("sloz nfmwl")
+    'HOLA MUNDO'
     """
     texto_cifrado = ""
 
     for letra in texto:
         if letra in ORIGINAL_MINUSCULA:
-            # Identifica la posición de cada letra
             indice = ORIGINAL_MINUSCULA.index(letra)
             texto_cifrado += CLAVE_MAYUSCULA [indice]
 
