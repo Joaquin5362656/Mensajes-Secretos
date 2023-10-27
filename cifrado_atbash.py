@@ -6,8 +6,9 @@ CLAVE_MAYUSCULA = 'ZYXWVUTSRQPONMLKJIHGFEDCBA'
 CLAVE_MINUSCULA = 'zyxwvutsrqponmlkjihgfedcba'
 
 def cifrado_atbash(texto):
-    # Jennifer Mota: Se genera el cifrado y descifrado atbash
     """
+    Se genera el cifrado y descifrado de atbash.
+
     >>> cifrado_atbash("HOLA MUNDO")
     'sloz nfmwl'
 

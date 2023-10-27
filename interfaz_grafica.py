@@ -7,6 +7,7 @@ from cifrado_atbash import cifrado_atbash
 # Función para la ventana de bienvenida
 
 def mostrar_ventana_bienvenida():
+    '''Abre la primer ventana para interactuar con el usuario. Contiene boton para continuar a la segunda ventana.'''
     ventana_bienvenida = Tk()
     ventana_bienvenida.title("TP Grupal Parte 1- Grupo [Codeo]")
     ventana_bienvenida.iconbitmap("icono.ico")
@@ -27,12 +28,12 @@ def mostrar_ventana_bienvenida():
     ventana_bienvenida.mainloop()
 
 
-"""
-Función para la ventana principal y dentro de ella la funcion procesar_mensaje que, según la opción que se elija se hara
-el cifrado o descifrado correspondiente
-"""
 
 def mostrar_ventana_principal():
+    """
+    Función para la ventana principal y dentro de ella la funcion procesar_mensaje que, según la opción que se elija se hara
+    el cifrado o descifrado correspondiente
+    """
 
     def procesar_mensaje(opcion):
         mensaje = entry_mensaje.get()
