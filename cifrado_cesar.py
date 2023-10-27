@@ -75,6 +75,3 @@ def cifrar_string(string,clave):
         string_result += new_caracter
     
     return string_result
-
-import doctest
-print(doctest.testmod())

@@ -15,3 +15,11 @@ Este programa permitirá encriptar un mensaje utilizando algoritmos criptográfi
 - Jennifer Mota
 
 - Oscar Ferreyra
+
+## Ejecucion
+
+python interfaz_grafica.py
+
+## Modo test
+
+python -m doctest -v cifrado_atbash.py cifrado_cesar.py

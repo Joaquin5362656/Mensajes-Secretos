@@ -1,5 +1,3 @@
-import doctest
-
 ORIGINAL_MINUSCULA = 'abcdefghijklmnopqrstuvwxyz'
 ORIGINAL_MAYUSCULA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 CLAVE_MAYUSCULA = 'ZYXWVUTSRQPONMLKJIHGFEDCBA'
@@ -40,8 +38,4 @@ def cifrado_atbash(texto):
 
         else:
             texto_cifrado += letra
-    return texto_cifrado
-def main():
-    # texto = input ("Introduce un texto: ")
-    print(doctest.testmod())
-main()      
+    return texto_cifrado   
