@@ -14,7 +14,7 @@ Este programa permitirá encriptar un mensaje utilizando algoritmos criptográfi
 
 - Jennifer Mota
 
-- Oscar Ferreyra
+- Martín Ferreyra
 
 ## Ejecucion
 
