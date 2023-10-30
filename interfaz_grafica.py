@@ -56,7 +56,7 @@ def mostrar_ventana_principal():
 
     # Configuraciones iniciales de la ventana
 
-    ventana_principal = Tk()
+    ventana_principal = Toplevel()
     ventana_principal.title("TP Grupal Parte 1 - Grupo: [Codeo]")
     ventana_principal.iconbitmap("logo.ico")
     ventana_principal.resizable(0,0)
