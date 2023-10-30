@@ -70,13 +70,13 @@ def mostrar_ventana_principal():
 
     # Labels y entrys
 
-    Label(ventana_principal, text="Ingrese el mensaje:").grid(row=1, column=1, sticky=W+E, pady=5, padx=5)
+    Label(ventana_principal, text="Ingrese el mensaje:").grid(row=1, column=1, sticky=W+E, pady=5, ipadx=10, ipady=3)
     entry_mensaje = Entry(ventana_principal)
-    entry_mensaje.grid(row=1, column=2, sticky=W+E)
+    entry_mensaje.grid(row=1, column=2, sticky=E, padx=5)
 
-    Label(ventana_principal, text="Ingrese la clave (si aplica):").grid(row=2, column=1, sticky=W+E, pady=5, padx=5)
+    Label(ventana_principal, text="Ingrese la clave (si aplica):").grid(row=2, column=1, sticky=W+E, pady=5, ipadx=10, ipady=3)
     entry_clave = Entry(ventana_principal)
-    entry_clave.grid(row=2, column=2, sticky=W+E)
+    entry_clave.grid(row=2, column=2, sticky=E, padx=5)
 
 
     # Botones a partir de un for loop
