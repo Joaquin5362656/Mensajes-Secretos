@@ -20,7 +20,7 @@ def mostrar_ventana_bienvenida():
     ventana_bienvenida.columnconfigure(0, weight=1)
     ventana_bienvenida.columnconfigure(3, weight=1)
 
-    Label(ventana_bienvenida, text="Bienvenido a la aplicación\nde mensajes secretos del grupo [Codeo]").grid(row=1, column=1, columnspan=2, pady=10, sticky=W+E, ipady=5, ipadx=10)
+    Label(ventana_bienvenida, text="Bienvenido a la aplicación\nde mensajes secretos del grupo [Codeo]\n Para continuar presione continuar, \nde lo contrario cierre la ventana").grid(row=1, column=1, columnspan=2, pady=10, sticky=W+E, ipady=5, ipadx=10)
     Button(ventana_bienvenida, text="Continuar", command=mostrar_ventana_principal).grid(row=2, column=1, columnspan=2, sticky=W+E)
     Label(ventana_bienvenida, text="Construída por", fg="#8c8c8c").grid(row=4, column=1, columnspan=2, pady=10, sticky=W+E+S, ipady=5)
     Label(ventana_bienvenida, text= "Joaquin Osorio\tJennifer Mota\nMartín Ferreyra\tDiego López", justify="left", fg="#8c8c8c").grid(row=5, column=1, columnspan=2, sticky=W+E, ipady=5)
