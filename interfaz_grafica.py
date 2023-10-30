@@ -87,8 +87,6 @@ def mostrar_ventana_principal():
         Button(ventana_principal, text=opcion, command=lambda opc=opcion: procesar_mensaje(opc)).grid(row=fila_boton, column=1, columnspan=2, sticky=W+E, pady=5)
         fila_boton += 1
 
-    ventana_principal.mainloop()
-
 
 # Llama a la función de la ventana de bienvenida para iniciar la aplicación
 mostrar_ventana_bienvenida()
