@@ -3,19 +3,34 @@ ABECEDARIO_MAY = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'
 NUMEROS = '1234567890'
 
 
-def cifrar_may(caracter, clave):
+def cifrar_may(caracter, clave):    
+    """
+    Funcion que recibe como parametros un caracter y una clave, ubica la posicion del caracter dentro de las
+    constantes globales y con la clave se desplaza al nuevo indice correspondiente, esto retorna el caracter cifrado
+    Funcion hecha cpor Joaquin Osorio
+    """
     posicion = ABECEDARIO_MAY.find(caracter)
     new_position = (posicion + clave) % len(ABECEDARIO_MAY)
     return ABECEDARIO_MAY[new_position]
 
 
 def cifrar_min(caracter, clave):
+    """
+    Funcion que recibe como parametros un caracter y una clave, ubica la posicion del caracter dentro de las
+    constantes globales y con la clave se desplaza al nuevo indice correspondiente, esto retorna el caracter cifrado
+    Funcion hecha cpor Joaquin Osorio
+    """
     posicion = ABECEDARIO_MIN.find(caracter)
     new_position = (posicion + clave) % len(ABECEDARIO_MIN)
     return ABECEDARIO_MIN[new_position]
 
 
 def cifrar_num(caracter, clave):
+    """
+    Funcion que recibe como parametros un caracter y una clave, ubica la posicion del caracter dentro de las
+    constantes globales y con la clave se desplaza al nuevo indice correspondiente, esto retorna el caracter cifrado
+    Funcion hecha cpor Joaquin Osorio
+    """
     posicion = NUMEROS.find(caracter)
     new_position = (posicion + clave) % len(NUMEROS)
     return NUMEROS[new_position]
@@ -23,6 +38,12 @@ def cifrar_num(caracter, clave):
 
 
 def detectar_caracter(caracter, clave):
+    """
+    Funcion que reciber un caracter y una clave como parametros y comprueba si el caracter estan dentro
+    de las constantes globables, dependiendo de que tipo de caracter sea, llama a su respectiva funcion
+    que cifra el caracter y retorna el caracter cifrado
+    Funcion hecha por Joaquin Osorio
+    """
     if caracter in ABECEDARIO_MAY:
         new_caracter = cifrar_may(caracter, clave)
     elif caracter in ABECEDARIO_MIN:
@@ -36,7 +57,11 @@ def detectar_caracter(caracter, clave):
 
 
 def cifrar_string(string,clave):
-
+    """
+    Funcion que se encarga de ietrar sobre el string que se le pasa como parametro y llama a la funcion detectar caracter
+    y recibe el caracter cifrado con su respectiva clave. Concatena todos los caracteres cifrados y retorna el string cifrado 
+    Funcion hecha por Joaquin Osorio
+    """
     """
     >>> cifrar_string("521", 3)
     '854'
