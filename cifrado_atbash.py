@@ -5,7 +5,7 @@ CLAVE_MINUSCULA = 'zyxwvutsrqponmlkjihgfedcba'
 
 def cifrado_atbash(texto):
     """
-    Se genera el cifrado y descifrado de atbash.
+    Jennifer Mota: Se genera el cifrado y descifrado de Atbash. Que consiste en la sustitucion de que cada letra del abecedario y se reemplaza por su inversa.
 
     >>> cifrado_atbash("HOLA MUNDO")
     'sloz nfmwl'
