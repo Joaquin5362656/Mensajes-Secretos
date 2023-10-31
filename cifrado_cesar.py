@@ -7,7 +7,7 @@ def cifrar_may(caracter, clave):
     """
     Funcion que recibe como parametros un caracter y una clave, ubica la posicion del caracter dentro de las
     constantes globales y con la clave se desplaza al nuevo indice correspondiente, esto retorna el caracter cifrado
-    Funcion hecha cpor Joaquin Osorio
+    Funcion hecha por Joaquin Osorio
     """
     posicion = ABECEDARIO_MAY.find(caracter)
     new_position = (posicion + clave) % len(ABECEDARIO_MAY)
@@ -18,7 +18,7 @@ def cifrar_min(caracter, clave):
     """
     Funcion que recibe como parametros un caracter y una clave, ubica la posicion del caracter dentro de las
     constantes globales y con la clave se desplaza al nuevo indice correspondiente, esto retorna el caracter cifrado
-    Funcion hecha cpor Joaquin Osorio
+    Funcion hecha por Joaquin Osorio
     """
     posicion = ABECEDARIO_MIN.find(caracter)
     new_position = (posicion + clave) % len(ABECEDARIO_MIN)
@@ -29,7 +29,7 @@ def cifrar_num(caracter, clave):
     """
     Funcion que recibe como parametros un caracter y una clave, ubica la posicion del caracter dentro de las
     constantes globales y con la clave se desplaza al nuevo indice correspondiente, esto retorna el caracter cifrado
-    Funcion hecha cpor Joaquin Osorio
+    Funcion hecha por Joaquin Osorio
     """
     posicion = NUMEROS.find(caracter)
     new_position = (posicion + clave) % len(NUMEROS)
