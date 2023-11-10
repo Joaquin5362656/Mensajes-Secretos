@@ -2,10 +2,37 @@ from tkinter import *
 from tkinter import ttk, messagebox
 from cifrado_cesar import cifrar_string
 from cifrado_atbash import cifrado_atbash
+from validacion_de_datos import validar_registro_usuario
+import csv
 
+def agregar_preguntas():
+    nuevas_preguntas = [
+        (6, "Color favorito"),
+        (7, "Comida preferida"),
+        (8, "Lugar de nacimiento"),
+        (9, "Libro favorito"),
+        (10, "Hobby principal"),
+    ]
+
+    # Leer preguntas existentes del archivo
+    preguntas_existentes = []
+    with open('preguntas.csv', 'r', newline='', encoding='utf-8') as archivo_csv:
+        lector_csv = csv.reader(archivo_csv)
+        preguntas_existentes = list(lector_csv)
+
+    # Agregar nuevas preguntas
+    for nueva_pregunta in nuevas_preguntas:
+        preguntas_existentes.append(nueva_pregunta)
+
+    # Guardar preguntas actualizadas en el archivo
+    with open('preguntas.csv', 'w', newline='', encoding='utf-8') as archivo_csv:
+        escritor_csv = csv.writer(archivo_csv)
+        escritor_csv.writerows(preguntas_existentes)
+
+# Llamar a la función para agregar preguntas
+agregar_preguntas()
 
 # Función para la ventana de bienvenida
-
 def mostrar_ventana_bienvenida():
     '''Abre la primer ventana para interactuar con el usuario. Contiene boton para continuar a la segunda ventana.
         Diego López y Martin Ferreyra
@@ -30,7 +57,7 @@ def mostrar_ventana_bienvenida():
 
     ventana_bienvenida.mainloop()
 
-
+# Funcion para la ventana de registro
 def mostrar_ventana_registro():
     ventana_registro = Tk()
     ventana_registro.title("TP Grupal Parte 1- Grupo [Codeo]")
@@ -44,7 +71,6 @@ def mostrar_ventana_registro():
     ventana_registro.columnconfigure(0, weight=1)
     ventana_registro.columnconfigure(3, weight=1)
 
-    #Label(ventana_registro, text="Bienvenido a la aplicación\nde mensajes secretos del grupo [Codeo]\n Para continuar regístrese, \nsi ya está registrado presione el boton de Ingreso").grid(row=1, column=1, columnspan=2, pady=10, sticky=W+E, ipady=5, ipadx=10)
     Label(ventana_registro, text="Ingrese un usuario:").grid(row=1, column=1, sticky=W+E, pady=5, ipadx=10, ipady=3)
     entry_usuario = Entry(ventana_registro)
     entry_usuario.grid(row=1, column=2, sticky=E, padx=5)
@@ -65,10 +91,12 @@ def mostrar_ventana_registro():
     combo_preguntas.grid(row=3, column=1, sticky=E, padx=15,pady=5)
 
     Label(ventana_registro, text="Ingrese su respuesta:").grid(row=4, column=1, sticky=W+E, pady=5, ipadx=10, ipady=3)
-    entry_respuesta = Entry(ventana_registro, show="*")  # Puedes cambiar "show" a None para mostrar la respuesta
+    entry_respuesta = Entry(ventana_registro, show="*") 
     entry_respuesta.grid(row=4, column=2, sticky=E, padx=5)
+    
+    Button(ventana_registro, text="Crear Usuario", command=lambda: validar_registro_usuario(entry_usuario, entry_clave, combo_preguntas, entry_respuesta)).grid(row=5, column=1, columnspan=2, sticky=W+E)
+    Button(ventana_registro, text="Ingreso Usuario", command=mostrar_ventana_principal).grid(row=6, column=1, columnspan=2, sticky=W+E)
 
-    Button(ventana_registro, text="Crear Usuario", command=mostrar_ventana_principal).grid(row=5, column=1, columnspan=2, sticky=W+E)
 
 def mostrar_ventana_principal():
     """
