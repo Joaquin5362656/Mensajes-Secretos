@@ -83,7 +83,7 @@ def mostrar_ventana_registro():
 
     def validar_registro():
         if validar_campos():
-            # Llamar a la función validar_registro_usuario
+            
             validar_registro_usuario(usuario_var, clave_var, pregunta_var, respuesta_var)
 
     global ventana_registro
