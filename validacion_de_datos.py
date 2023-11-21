@@ -99,11 +99,7 @@ def solicitar_clave():
         print("Clave no válida. Asegúrese de cumplir con los requisitos.")
 
 
-def validar_registro_usuario(entry_usuario, entry_clave, combo_preguntas, entry_respuesta):
-    id_usuario = entry_usuario.get()
-    clave_usuario = entry_clave.get()
-    id_pregunta = combo_preguntas.get()
-    respuesta_recuperacion = entry_respuesta.get()
+def validar_registro_usuario(id_usuario, clave_usuario, id_pregunta, respuesta_recuperacion):
     intentos_recuperacion = 0  # Puedes ajustar esto según tus necesidades
 
     # Validar identificador
@@ -136,12 +132,6 @@ def validar_registro_usuario(entry_usuario, entry_clave, combo_preguntas, entry_
         with open('usuarios.csv', 'a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([id_usuario, clave_usuario, id_pregunta, respuesta_recuperacion, intentos_recuperacion])
-
-        # Limpiar campos después de un registro exitoso
-        entry_usuario.delete(0, END)
-        entry_clave.delete(0, END)
-        combo_preguntas.set("Seleccione una pregunta")
-        entry_respuesta.delete(0, END)
 
         messagebox.showinfo("Éxito", "Usuario creado con éxito")
     except Exception as e:

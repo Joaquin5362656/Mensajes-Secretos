@@ -61,8 +61,8 @@ def cifrar_string(string,clave):
     Funcion que se encarga de ietrar sobre el string que se le pasa como parametro y llama a la funcion detectar caracter
     y recibe el caracter cifrado con su respectiva clave. Concatena todos los caracteres cifrados y retorna el string cifrado 
     Funcion hecha por Joaquin Osorio
-    """
-    """
+    
+    
     >>> cifrar_string("521", 3)
     '854'
 
