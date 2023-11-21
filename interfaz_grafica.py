@@ -30,9 +30,7 @@ def agregar_preguntas():
         escritor_csv = csv.writer(archivo_csv)
         escritor_csv.writerows(preguntas_existentes)
 
-# Llamar a la función para agregar preguntas
 agregar_preguntas()
-
 # Función para la ventana de bienvenida
 def mostrar_ventana_bienvenida():
     '''Abre la primer ventana para interactuar con el usuario. Contiene boton para continuar a la segunda ventana.
@@ -137,20 +135,36 @@ def mostrar_ventana_ingreso():
     ventana_ingreso.columnconfigure(0, weight=1)
     ventana_ingreso.columnconfigure(3, weight=1)
 
-    Label(ventana_ingreso, text="Ingrese su usuario:").pack(pady=10)
+    Label(ventana_ingreso, text="Ingrese su usuario:").grid(row=0, column=0, sticky=W+E, pady=5, ipadx=10, ipady=3)
     entry_usuario_ingreso = Entry(ventana_ingreso)
-    entry_usuario_ingreso.pack(pady=5)
+    entry_usuario_ingreso.grid(row=0, column=1, sticky=E, padx=5)
 
-    Label(ventana_ingreso, text="Ingrese su clave:").pack(pady=10)
+    Label(ventana_ingreso, text="Ingrese su clave:").grid(row=1, column=0, sticky=W+E, pady=5, ipadx=10, ipady=3)
     entry_clave_ingreso = Entry(ventana_ingreso, show="*")
-    entry_clave_ingreso.pack(pady=5)
+    entry_clave_ingreso.grid(row=1, column=1, sticky=E, padx=5)
 
-    Button(ventana_ingreso, text="Ingresar", command=lambda: validar_ingreso(ventana_ingreso, entry_usuario_ingreso, entry_clave_ingreso)).pack(pady=10)
-
+    Button(ventana_ingreso, text="Ingresar", command=lambda: validar_ingreso(ventana_ingreso, entry_usuario_ingreso, entry_clave_ingreso)).grid(row=2, column=1, columnspan=2, sticky=W+E)
+    Button(ventana_ingreso, text="He olvidado mi contraseña", command= recuperacion_clave).grid(row=3, column=1, columnspan=2, sticky=W+E)
     # Vincula la tecla Enter al botón
     entry_clave_ingreso.bind("<Return>", lambda event=None: validar_ingreso(ventana_ingreso, entry_usuario_ingreso, entry_clave_ingreso))
 
+def recuperacion_clave():
+    ventana_recuperacion= Toplevel()
+    ventana_recuperacion.title("recuperación clave")
+    ventana_recuperacion.geometry("350x300")
+    ventana_recuperacion.config(bg="#87CEFA")
+    ventana_recuperacion.rowconfigure(0, weight=75)
+    ventana_recuperacion.rowconfigure(3, weight=100)
+    ventana_recuperacion.rowconfigure(6, weight=100)
+    ventana_recuperacion.columnconfigure(0, weight=1)
+    ventana_recuperacion.columnconfigure(3, weight=1)
 
+    Label(ventana_recuperacion, text="Si ha olvidado su contraseña,por favor complete todos los campos.").grid(row=0, column=0, sticky=W+E, pady=5, ipadx=10, ipady=3)
+    Label(ventana_recuperacion, text="Ingrese su usuario:").grid(row=1, column=0, sticky=W+E, pady=5, ipadx=10, ipady=3)
+    entry_usuario_recuperacion = Entry(ventana_recuperacion)
+    entry_usuario_recuperacion.grid(row=1, column=1, sticky=E, padx=5)
+
+    
 def validar_ingreso(ventana_ingreso, entry_usuario_ingreso, entry_clave_ingreso):
     id_usuario_ingreso = entry_usuario_ingreso.get()
     clave_ingreso = entry_clave_ingreso.get()
