@@ -4,9 +4,9 @@ from cifrado_cesar import cifrar_string
 from cifrado_atbash import cifrado_atbash
 #from borrador1 import validar_ingreso
 import csv
-ARCHIVO_USUARIOS = "usuarios.csv"
+ARCHIVO_USUARIOS = "./archivos csv/usuarios.csv"
 MAX = "ZZZZ"
-ARCHIVO_MENSAJES = 'mensajes.csv'
+ARCHIVO_MENSAJES = "./archivos csv/mensajes.csv"
 #REMITENTE = validar_ingreso()
 
 
@@ -45,7 +45,7 @@ def ventana_cesar():
     # Configuraciones iniciales de la ventana
     ventana_cesar = Toplevel()
     ventana_cesar.title("Cifrado Cesar - Grupo: [Codeo]")
-    ventana_cesar.iconbitmap("logo.ico")
+    ventana_cesar.iconbitmap("./logos/logo.ico")
     ventana_cesar.resizable(0, 0)
     ventana_cesar.geometry("355x210")
     ventana_cesar.config(bg="#00FA9A")
@@ -114,7 +114,7 @@ def ventana_atbash():
     # Configuraciones iniciales de la ventana
     ventana_atbash = Toplevel()
     ventana_atbash.title("Cifrado Atbash - Grupo: [Codeo]")
-    ventana_atbash.iconbitmap("logo.ico")
+    ventana_atbash.iconbitmap("./logos/logo.ico")
     ventana_atbash.resizable(0, 0)
     ventana_atbash.geometry("350x150")
     ventana_atbash.config(bg="#00FA9A")

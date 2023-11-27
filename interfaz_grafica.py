@@ -3,6 +3,8 @@ from tkinter import ttk, messagebox
 from cifrado_cesar import cifrar_string
 from cifrado_atbash import cifrado_atbash
 from validacion_de_datos import validar_registro_usuario
+from funciones_de_envio import ventana_atbash
+from funciones_de_envio import ventana_cesar
 import csv
 import os
 
@@ -224,13 +226,15 @@ def validar_ingreso(ventana_ingreso, id_usuario_ingreso, clave_ingreso):
                         bloqueo = True
 
         return bloqueo
-    
+
+
     ingreso_exitoso = False
 
+    # Determinamos si el usuario existe y si la clave es correcta
     with open('./archivos csv/usuarios.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if row and row[0] == id_usuario_ingreso and row[1] == clave_ingreso and int(row[4]) <= 3:
+            if row and row[0] == id_usuario_ingreso and row[1] == clave_ingreso:
                 ingreso_exitoso = True
                 bloqueado = checkear_bloqueo(id_usuario_ingreso)
 
@@ -253,6 +257,7 @@ def mostrar_ventana_principal():
     """
 
     def procesar_mensaje(opcion):
+        resultado = ""
         mensaje = entry_mensaje.get()
 
         if opcion == "Cifrar Atbash":
@@ -265,22 +270,27 @@ def mostrar_ventana_principal():
         elif opcion == "Descifrar César":
             clave = -int(entry_clave.get())  # Descifrar es cifrar con la clave negativa
             resultado = cifrar_string(mensaje, clave)
+        elif opcion == "Enviar Mensaje Cifrado César":              #Agregado para el objetivo 2
+            ventana_cesar()                                 #Agregado para el objetivo 2
+        elif opcion == "Enviar Mensaje Cifrado Atbash":             #Agregado para el objetivo 2
+            ventana_atbash()                                #Agregado para el objetivo 2
         else:
             resultado = "Opción no válida"
 
-        messagebox.showinfo("Resultado", f"Resultado: {resultado}")
+        if resultado:
+            messagebox.showinfo("Resultado", f"Resultado: {resultado}")
 
     # Configuraciones iniciales de la ventana
     ventana_principal = Tk()
-    ventana_principal.title("TP Grupal Parte 1 - Grupo: [Codeo]")
+    ventana_principal.title("Cifrado y envío de mensajes")
     ventana_principal.iconbitmap("./logos/logo.ico")
     ventana_principal.resizable(0, 0)
-    ventana_principal.geometry("350x250")
+    ventana_principal.geometry("350x350")
     ventana_principal.config(bg="#00FA9A")
     ventana_principal.columnconfigure(0, weight=1)
     ventana_principal.columnconfigure(4, weight=1)
     ventana_principal.rowconfigure(0, weight=1)
-    ventana_principal.rowconfigure(7, weight=1)
+    ventana_principal.rowconfigure(9, weight=1)
 
     # Labels y entrys
     Label(ventana_principal, text="Ingrese el mensaje:").grid(row=1, column=1, sticky=W+E, pady=5, ipadx=10, ipady=3)
@@ -293,7 +303,7 @@ def mostrar_ventana_principal():
 
     # Botones a partir de un for loop
     fila_boton = 3
-    opciones = ["Cifrar Atbash", "Descifrar Atbash", "Cifrar César", "Descifrar César"]
+    opciones = ["Cifrar Atbash", "Descifrar Atbash", "Cifrar César", "Descifrar César", "Enviar Mensaje Cifrado César", "Enviar Mensaje Cifrado Atbash"]
     for opcion in opciones:
         Button(ventana_principal, text=opcion, command=lambda opc=opcion: procesar_mensaje(opc)).grid(row=fila_boton, column=1, columnspan=2, sticky=W+E, pady=5)
         fila_boton += 1

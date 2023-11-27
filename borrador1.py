@@ -3,8 +3,8 @@ from tkinter import ttk, messagebox
 from cifrado_cesar import cifrar_string
 from cifrado_atbash import cifrado_atbash
 from validacion_de_datos import validar_registro_usuario
-from borrador2 import ventana_cesar
-from borrador2 import ventana_atbash
+from funciones_de_envio import ventana_cesar
+from funciones_de_envio import ventana_atbash
 import csv
 
 """
