@@ -82,7 +82,7 @@ def ventana_cesar():
                 
                 if destinatario != "*":
                     with open(ARCHIVO_MENSAJES, "a") as archivo_mensaje:
-                        archivo_mensaje.write(f'{destinatario}, {cifrado_mas_clave}, {mensaje}\n')
+                        archivo_mensaje.write(f'{destinatario}, {cifrado_mas_clave}, {mensaje}\n')              #NECESITO EL USUARIO PARA AGREGARLO EN EL ARCHIVO MENSAJES.CSV
                     messagebox.showinfo("Éxito", "Envio exitoso")
                     ventana_cesar.destroy()
                 else:
@@ -92,7 +92,7 @@ def ventana_cesar():
                             registro = leer_archivo(archivo_usuarios)
                             if registro:
                                 usuario = registro[0]
-                                archivo_mensajes.write(f'{usuario}, {cifrado_mas_clave}, {mensaje}\n')
+                                archivo_mensajes.write(f'{usuario}, {cifrado_mas_clave}, {mensaje}\n')                #NECESITO EL USUARIO PARA AGREGARLO EN EL ARCHIVO MENSAJES.CSV
                             else:
                                 continuar = False
                     ventana_cesar.destroy()
@@ -147,7 +147,7 @@ def ventana_atbash():
                 
                 if destinatario != "*":
                     with open(ARCHIVO_MENSAJES, "a") as archivo_mensaje:
-                        archivo_mensaje.write(f'{destinatario}, {cifrado}, {mensaje}\n')
+                        archivo_mensaje.write(f'{destinatario}, {cifrado}, {mensaje}\n')    #NECESITO EL USUARIO PARA AGREGARLO EN EL ARCHIVO MENSAJES.CSV
                     messagebox.showinfo("Éxito", "Envio exitoso")
                     ventana_atbash.destroy()
                 else:
@@ -157,7 +157,7 @@ def ventana_atbash():
                             registro = leer_archivo(archivo_usuarios)
                             if registro:
                                 usuario = registro[0]
-                                archivo_mensajes.write(f'{usuario}, {cifrado}, {mensaje}\n')
+                                archivo_mensajes.write(f'{usuario}, {cifrado}, {mensaje}\n')           #NECESITO EL USUARIO PARA AGREGARLO EN EL ARCHIVO MENSAJES.CSV
                             else:
                                 continuar = False
                     ventana_atbash.destroy()
