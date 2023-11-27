@@ -4,6 +4,7 @@ from cifrado_cesar import cifrar_string
 from cifrado_atbash import cifrado_atbash
 from validacion_de_datos import validar_registro_usuario
 import csv
+import os
 
 
 # Función para la ventana de bienvenida
@@ -157,25 +158,73 @@ def ventana_recuperar_clave():
 def recuperar_clave(id_usuario, id_pregunta, respuesta_recuperacion):
     entradas_validas = False
 
-    with open('./archivos csv/usuarios.csv', 'r+') as file:
+    with open('./archivos csv/usuarios.csv', 'r') as file:
         reader = csv.reader(file)
-        writer = csv.writer(file)
         for row in reader:
             if row and row[0] == id_usuario and row[2] == id_pregunta and row[3] == respuesta_recuperacion:
                 messagebox.showinfo("Éxito", f"Su contraseña es: {row[1]}")
+                actualizar_intentos_recuperacion(row, reinicio=True)
                 entradas_validas = True
+
             elif row and row[0] == id_usuario and (row[2] != id_pregunta or row[3] != respuesta_recuperacion):
                 messagebox.showerror("Error", "Respuesta incorrecta")
-                row[4] = int(row[4]) + 1
+                actualizar_intentos_recuperacion(row)
                 entradas_validas = True
-                writer.writerow([row[0],row[1],row[2],row[3],row[4]])
     
     if not entradas_validas:
         messagebox.showerror("Error", "Verifique los datos")
 
 
+def actualizar_intentos_recuperacion(datos_usuario, reinicio=False):
+    registro_existente = False
+
+    # Abrir los registros existentes de intentos de recuperacion
+    with open("./archivos csv/recuperacion.csv", "r+") as datos_recuperaciones:
+        reader = csv.reader(datos_recuperaciones)
+
+        # Abrir nuevo archivo en donde se registra la informacion existente mas la actualizacion
+        with open("./archivos csv/actualizacion.csv", "x+", newline='') as actualizacion:
+            writer = csv.writer(actualizacion)
+
+            # Recorrer lineas de registros existentes
+            for row in reader:
+                if row and row[0] == datos_usuario[0] and int(row[1]) <= 3:
+                    if reinicio:
+                        writer.writerow([datos_usuario[0],0])
+                        registro_existente = True
+                    else:
+                        writer.writerow([datos_usuario[0],int(row[1]) + 1])
+                        registro_existente = True
+                elif row and row[0] == datos_usuario[0] and int(row[1]) > 3:
+                    messagebox.showerror("Error", "Usuario Bloqueado")
+                    writer.writerow([datos_usuario[0],int(row[1]) + 1])
+                    registro_existente = True
+                else:
+                    writer.writerow(row)
+            
+            # Si el usuario no existia en el archivo, se agrega
+            if not registro_existente:
+                writer.writerow([datos_usuario[0],1])
+            
+    os.remove("./archivos csv/recuperacion.csv")
+    os.rename("./archivos csv/actualizacion.csv", "./archivos csv/recuperacion.csv")
+
+
 
 def validar_ingreso(ventana_ingreso, id_usuario_ingreso, clave_ingreso):
+    def checkear_bloqueo(id_usuario):
+        bloqueo = False
+        
+        with open("./archivos csv/recuperacion.csv", "r") as file:
+            reader = csv.reader(file)
+
+            for row in reader:
+                if row and row[0] == id_usuario:
+                    if int(row[1]) > 3:
+                        bloqueo = True
+
+        return bloqueo
+    
     ingreso_exitoso = False
 
     with open('./archivos csv/usuarios.csv', 'r') as file:
@@ -183,12 +232,14 @@ def validar_ingreso(ventana_ingreso, id_usuario_ingreso, clave_ingreso):
         for row in reader:
             if row and row[0] == id_usuario_ingreso and row[1] == clave_ingreso and int(row[4]) <= 3:
                 ingreso_exitoso = True
-                messagebox.showinfo("Éxito", "Ingreso exitoso")
-                ventana_ingreso.destroy()  # Cerrar la ventana de ingreso
-                mostrar_ventana_principal()  # Abrir la ventana principal
-            elif row and row[0] == id_usuario_ingreso and int(row[4]) > 3:
-                ingreso_exitoso = True
-                messagebox.showerror("Error", "Usuario bloqueado")
+                bloqueado = checkear_bloqueo(id_usuario_ingreso)
+
+                if bloqueado:
+                    messagebox.showerror("Error", "Usuario bloqueado")
+                else:
+                    messagebox.showinfo("Éxito", "Ingreso exitoso")
+                    ventana_ingreso.destroy()  # Cerrar la ventana de ingreso
+                    mostrar_ventana_principal()  # Abrir la ventana principal
 
     if not ingreso_exitoso:
         messagebox.showerror("Error", "Ingreso fallido. Verifica tus credenciales.")
