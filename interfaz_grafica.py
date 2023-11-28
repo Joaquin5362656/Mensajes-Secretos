@@ -212,7 +212,6 @@ def actualizar_intentos_recuperacion(datos_usuario, reinicio=False):
     os.rename("./archivos csv/actualizacion.csv", "./archivos csv/recuperacion.csv")
 
 
-
 def validar_ingreso(ventana_ingreso, id_usuario_ingreso, clave_ingreso):
     def checkear_bloqueo(id_usuario):
         bloqueo = False
@@ -243,37 +242,36 @@ def validar_ingreso(ventana_ingreso, id_usuario_ingreso, clave_ingreso):
                 else:
                     messagebox.showinfo("Éxito", "Ingreso exitoso")
                     ventana_ingreso.destroy()  # Cerrar la ventana de ingreso
-                    mostrar_ventana_principal()  # Abrir la ventana principal
+                    mostrar_ventana_principal(id_usuario_ingreso)  # Abrir la ventana principal
 
     if not ingreso_exitoso:
         messagebox.showerror("Error", "Ingreso fallido. Verifica tus credenciales.")
 
 
-def mostrar_ventana_principal():
+def mostrar_ventana_principal(id_usuario):
     """
     Función para la ventana principal y dentro de ella la función procesar_mensaje que, según la opción que se elija se hará
     el cifrado o descifrado correspondiente.
     Diego López y Martín Ferreyra
     """
 
-    def procesar_mensaje(opcion):
+    def procesar_mensaje(opcion, mensaje, clave):
         resultado = ""
-        mensaje = entry_mensaje.get()
 
         if opcion == "Cifrar Atbash":
             resultado = cifrado_atbash(mensaje)
         elif opcion == "Descifrar Atbash":
             resultado = cifrado_atbash(mensaje)  # Al ser Atbash, cifrar y descifrar es lo mismo
         elif opcion == "Cifrar César":
-            clave = int(entry_clave.get())
-            resultado = cifrar_string(mensaje, clave)
+            if clave.isnumeric():
+                resultado = cifrar_string(mensaje, int(clave))
         elif opcion == "Descifrar César":
-            clave = -int(entry_clave.get())  # Descifrar es cifrar con la clave negativa
-            resultado = cifrar_string(mensaje, clave)
-        elif opcion == "Enviar Mensaje Cifrado César":              #Agregado para el objetivo 2
-            ventana_cesar()                                 #Agregado para el objetivo 2
-        elif opcion == "Enviar Mensaje Cifrado Atbash":             #Agregado para el objetivo 2
-            ventana_atbash()                                #Agregado para el objetivo 2
+            if clave.isnumeric():
+                resultado = cifrar_string(mensaje, -int(clave))
+        elif opcion == "Enviar Mensaje Cifrado César":
+            ventana_cesar(id_usuario)
+        elif opcion == "Enviar Mensaje Cifrado Atbash":
+            ventana_atbash(id_usuario)
         else:
             resultado = "Opción no válida"
 
@@ -281,7 +279,7 @@ def mostrar_ventana_principal():
             messagebox.showinfo("Resultado", f"Resultado: {resultado}")
 
     # Configuraciones iniciales de la ventana
-    ventana_principal = Tk()
+    ventana_principal = Toplevel()
     ventana_principal.title("Cifrado y envío de mensajes")
     ventana_principal.iconbitmap("./logos/logo.ico")
     ventana_principal.resizable(0, 0)
@@ -293,11 +291,11 @@ def mostrar_ventana_principal():
     ventana_principal.rowconfigure(9, weight=1)
 
     # Labels y entrys
-    Label(ventana_principal, text="Ingrese el mensaje:").grid(row=1, column=1, sticky=W+E, pady=5, ipadx=10, ipady=3)
+    Label(ventana_principal, text="Ingrese el mensaje:").grid(row=1, column=1, sticky=W+E, pady=5, ipadx=10, ipady=1)
     entry_mensaje = Entry(ventana_principal)
     entry_mensaje.grid(row=1, column=2, sticky=E, padx=5)
 
-    Label(ventana_principal, text="Ingrese la clave (si aplica):").grid(row=2, column=1, sticky=W+E, pady=5, ipadx=10, ipady=3)
+    Label(ventana_principal, text="Ingrese la clave (si aplica):").grid(row=2, column=1, sticky=W+E, pady=5, ipadx=10, ipady=1)
     entry_clave = Entry(ventana_principal)
     entry_clave.grid(row=2, column=2, sticky=E, padx=5)
 
@@ -305,7 +303,7 @@ def mostrar_ventana_principal():
     fila_boton = 3
     opciones = ["Cifrar Atbash", "Descifrar Atbash", "Cifrar César", "Descifrar César", "Enviar Mensaje Cifrado César", "Enviar Mensaje Cifrado Atbash"]
     for opcion in opciones:
-        Button(ventana_principal, text=opcion, command=lambda opc=opcion: procesar_mensaje(opc)).grid(row=fila_boton, column=1, columnspan=2, sticky=W+E, pady=5)
+        Button(ventana_principal, text=opcion, command=lambda opc=opcion: procesar_mensaje(opc, entry_mensaje.get(), entry_clave.get())).grid(row=fila_boton, column=1, columnspan=2, sticky=W+E, pady=5)
         fila_boton += 1
 
     ventana_principal.mainloop()
