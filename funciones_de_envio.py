@@ -52,11 +52,11 @@ def verificar_destinatario(destinatario, id_usuario):
         encontrado = False
         messagebox.showerror("Error", "El destinatario está bloqueado")
 
-    if destinatario == id_usuario:
+    elif destinatario == id_usuario:
         encontrado = False
         messagebox.showerror("Error", "El destinatario es usted mismo")
 
-    if not encontrado:
+    elif not encontrado:
         messagebox.showerror("Error", "Destinatario Inexistente")
 
     return encontrado
@@ -102,7 +102,7 @@ def ventana_cesar(id_usuario):
             entry_clave = Entry(ventana_cesar)
             entry_clave.grid(row=3, column=2, sticky=E, padx=5)
 
-            boton_enviar = Button(ventana_cesar, text="Enviar", command=lambda: enviar_mensaje_cesar(entry_destinatario.get(), entry_oracion.get(), entry_clave.get(), boton_enviar, cifrar_string))
+            boton_enviar = Button(ventana_cesar, text="Enviar", command=lambda: enviar_mensaje_cesar(entry_destinatario.get(), entry_oracion.get(), entry_clave.get(), boton_enviar))
             boton_enviar.grid(row=3, column=3, padx=5, sticky=W+E)
 
 

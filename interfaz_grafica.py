@@ -5,6 +5,7 @@ from cifrado_atbash import cifrado_atbash
 from validacion_de_datos import validar_registro_usuario
 from funciones_de_envio import ventana_atbash
 from funciones_de_envio import ventana_cesar
+from consultar_mensajes_cifrados import consultar_mensajes_recibidos
 import csv
 import os
 
@@ -257,7 +258,7 @@ def mostrar_ventana_principal(id_usuario):
 
     def procesar_mensaje(opcion, mensaje, clave):
         resultado = ""
-
+        
         if opcion == "Cifrar Atbash":
             resultado = cifrado_atbash(mensaje)
         elif opcion == "Descifrar Atbash":
@@ -283,12 +284,12 @@ def mostrar_ventana_principal(id_usuario):
     ventana_principal.title("Cifrado y envío de mensajes")
     ventana_principal.iconbitmap("./logos/logo.ico")
     ventana_principal.resizable(0, 0)
-    ventana_principal.geometry("350x350")
+    ventana_principal.geometry("350x400")
     ventana_principal.config(bg="#00FA9A")
     ventana_principal.columnconfigure(0, weight=1)
     ventana_principal.columnconfigure(4, weight=1)
     ventana_principal.rowconfigure(0, weight=1)
-    ventana_principal.rowconfigure(9, weight=1)
+    ventana_principal.rowconfigure(10, weight=1)
 
     # Labels y entrys
     Label(ventana_principal, text="Ingrese el mensaje:").grid(row=1, column=1, sticky=W+E, pady=5, ipadx=10, ipady=1)
@@ -299,8 +300,10 @@ def mostrar_ventana_principal(id_usuario):
     entry_clave = Entry(ventana_principal)
     entry_clave.grid(row=2, column=2, sticky=E, padx=5)
 
+    Button(ventana_principal, text="Consultar mensajes recibidos", command=lambda: consultar_mensajes_recibidos(id_usuario)).grid(row=3, column=1, columnspan=2, sticky=W+E, pady=5)
+
     # Botones a partir de un for loop
-    fila_boton = 3
+    fila_boton = 4
     opciones = ["Cifrar Atbash", "Descifrar Atbash", "Cifrar César", "Descifrar César", "Enviar Mensaje Cifrado César", "Enviar Mensaje Cifrado Atbash"]
     for opcion in opciones:
         Button(ventana_principal, text=opcion, command=lambda opc=opcion: procesar_mensaje(opc, entry_mensaje.get(), entry_clave.get())).grid(row=fila_boton, column=1, columnspan=2, sticky=W+E, pady=5)
