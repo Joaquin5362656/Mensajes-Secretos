@@ -7,14 +7,17 @@ from tkinter import END, messagebox
 def validar_identificador(identificador):
     """
     Valida un identificador de usuario.
+    Requisitos:
+
+    - Entre 5 y 10 caracteres
+    - Formado solo por letras y numeros
+    - Puede incluir los caracteres '_' '-' '.'
 
     >>> validar_identificador("usuario_123")
     True
     >>> validar_identificador("mi-usuario")
     True
     >>> validar_identificador("user.name")
-    True
-    >>> validar_identificador("abc123")
     True
     >>> validar_identificador("user 123")
     False
@@ -26,13 +29,15 @@ def validar_identificador(identificador):
     False
     >>> validar_identificador("aBc_DeF")
     True
-    >>> validar_identificador("test-123")
-    True
     >>> validar_identificador("test.user")
     True
     >>> validar_identificador("long_username_123")
     False
     """
+
+    es_valido = True
+    
+    # Checkear cantidad de caracteres
     longitud = len(identificador)
     es_largo = 5 <= longitud <= 15
 
@@ -40,29 +45,62 @@ def validar_identificador(identificador):
 
     for caracter in identificador:
         if not (caracter.isalnum() or caracter in caracteres_permitidos):
-            return False
+            es_valido = False
 
-    return es_largo
+    return es_valido and es_largo
+
 
 def validar_clave(clave):
     """
     Valida una clave de usuario.
+    Requisitos:
+
+    - Entre 4 y 8 caracteres
+    - Al menos una mayuscula
+    - Al menos una minuscula
+    - Al menos un numero
+    - Al menos uno de los caracteres '_' '-' '#' '*'
+    - No caracteres repetidos adyacentes
+
+    >>> validar_clave("Codeo_1")
+    True
+    >>> validar_clave("Coodeo_1")
+    False
+    >>> validar_clave("Codeo_")
+    False
+    >>> validar_clave("codeo_1")
+    False
+    >>> validar_clave("Codeo_12345")
+    False
+    >>> validar_clave("Codeo1")
+    False
+    >>> validar_clave("coodeo")
+    False
+    >>> validar_clave("codeo1")
+    False
+    >>> validar_clave("coodeoooooo")
+    False
+    >>> validar_clave("Codeo#0")
+    True
     """
-    longitud = len(clave)
+
+    # Variables de requisitos
+    longitud_valida = False
     tiene_mayuscula = False
     tiene_minuscula = False
     tiene_numero = False
     tiene_caracter_especial = False
+    no_caracteres_adyacentes = True
 
     caracteres_especiales = "_-*#"
 
-    if not 4 <= longitud <= 8:
-        return False
+    if 4 <= len(clave) <= 8:
+        longitud_valida = True
 
     # Verificar caracteres repetidos adyacentes
-    for i in range(longitud - 1):
+    for i in range(len(clave) - 1):
         if clave[i] == clave[i + 1]:
-            return False
+            no_caracteres_adyacentes = False
 
     for caracter in clave:
         if caracter.isupper():
@@ -74,69 +112,76 @@ def validar_clave(clave):
         elif caracter in caracteres_especiales:
             tiene_caracter_especial = True
 
-    return tiene_mayuscula and tiene_minuscula and tiene_numero and tiene_caracter_especial
-
-def solicitar_identificador():
-    while True:
-
-        identificador = input("Ingrese su identificador de usuario: ")
-
-        if validar_identificador(identificador):
-            print("Identificador válido. ¡Bienvenido!")
-            return
-
-        print("Identificador no válido. Asegúrese de cumplir con los requisitos.")
-
-def solicitar_clave():
-    while True:
-
-        clave = input("Ingrese su clave de usuario: ")
-
-        if validar_clave(clave):
-            print("Clave válida. ¡Bienvenido!")
-            return
-
-        print("Clave no válida. Asegúrese de cumplir con los requisitos.")
+    return tiene_mayuscula and tiene_minuscula and tiene_numero and tiene_caracter_especial and longitud_valida and no_caracteres_adyacentes
 
 
 def validar_registro_usuario(id_usuario, clave_usuario, id_pregunta, respuesta_recuperacion):
-    intentos_recuperacion = 0  # Puedes ajustar esto según tus necesidades
+    registro_valido = True
 
     # Validar identificador
     if not validar_identificador(id_usuario):
         print("Identificador no válido. Asegúrese de cumplir con los requisitos.")
         messagebox.showinfo("Error", "Identificador no válido. Asegúrese de cumplir con los requisitos.")
-        return
+        registro_valido = False
 
     # Validar contraseña
     if not validar_clave(clave_usuario):
         print("Contraseña no válida. Asegúrese de cumplir con los requisitos.")
         messagebox.showinfo("Error", "Contraseña no válida. Asegúrese de cumplir con los requisitos.")
-        return
+        registro_valido = False
+    
+    # Validar campo de pregunta y respuesta
+    if id_pregunta == "Seleccione pregunta" or respuesta_recuperacion == "":
+        print("Pregunta o respuesta de recuperacion vacias")
+        messagebox.showinfo("Error", "Pregunta o respuesta de recuperacion vacias.")
+        registro_valido = False
 
-    try:
-        # Cargar el archivo CSV existente
-        with open('usuarios.csv', 'r') as file:
-            reader = csv.reader(file)
-            for row in reader:
-                if row and row[0] == id_usuario:
-                    print("Identificador en uso")
-                    messagebox.showinfo("Error", "Identificador en uso")
-                    return
-    except FileNotFoundError:
-        print("No se encontró el archivo de usuarios. Creando uno nuevo...")
+    # Checkear que no este el identificador en uso
+    with open('./archivos csv/usuarios.csv', 'r') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            if row and row[0] == id_usuario:
+                print("Identificador en uso")
+                messagebox.showinfo("Error", "Identificador en uso")
+                registro_valido = False
 
-    # Continuar con el registro del usuario
-    try:
-        # Escribir en el archivo CSV
-        with open('usuarios.csv', 'a', newline='') as file:
+
+    if registro_valido:
+        with open('./archivos csv/usuarios.csv', 'a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([id_usuario, clave_usuario, id_pregunta, respuesta_recuperacion, intentos_recuperacion])
+            writer.writerow([id_usuario, clave_usuario, id_pregunta, respuesta_recuperacion, 0])
 
         messagebox.showinfo("Éxito", "Usuario creado con éxito")
-    except Exception as e:
-        print(f"Error durante el registro: {e}")
-        messagebox.showinfo("Error", "Ocurrió un error durante el registro. Por favor, inténtelo de nuevo.")
+
+
+# Funcion con propositos de testeo
+def solicitar_identificador():
+    identificador_no_valido = True
+    
+    while identificador_no_valido:
+
+        identificador = input("Ingrese su identificador de usuario: ")
+
+        if validar_identificador(identificador):
+            identificador_no_valido = False
+            print("Identificador válido. ¡Bienvenido!")
+        else:
+            print("Identificador no válido. Asegúrese de cumplir con los requisitos.")
+
+
+# Funcion con propositos de testeo
+def solicitar_clave():
+    clave_no_valida = True
+
+    while clave_no_valida:
+
+        clave = input("Ingrese su clave de usuario: ")
+
+        if validar_clave(clave):
+            clave_no_valida = False
+            print("Clave válida. ¡Bienvenido!")
+        else:
+            print("Clave no válida. Asegúrese de cumplir con los requisitos.")
 
 
 def main():

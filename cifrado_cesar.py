@@ -1,5 +1,5 @@
-ABECEDARIO_MIN = 'abcdefghijklmnñopqrstuvwxyz'
-ABECEDARIO_MAY = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'
+ABECEDARIO_MIN = 'abcdefghijklmnopqrstuvwxyz'
+ABECEDARIO_MAY = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 NUMEROS = '1234567890'
 
 
@@ -10,7 +10,7 @@ def cifrar_may(caracter, clave):
     Funcion hecha por Joaquin Osorio
     """
     posicion = ABECEDARIO_MAY.find(caracter)
-    new_position = (posicion + clave) % len(ABECEDARIO_MAY)
+    new_position = (posicion + int(clave)) % len(ABECEDARIO_MAY)
     return ABECEDARIO_MAY[new_position]
 
 
@@ -21,7 +21,7 @@ def cifrar_min(caracter, clave):
     Funcion hecha por Joaquin Osorio
     """
     posicion = ABECEDARIO_MIN.find(caracter)
-    new_position = (posicion + clave) % len(ABECEDARIO_MIN)
+    new_position = (posicion + int(clave)) % len(ABECEDARIO_MIN)
     return ABECEDARIO_MIN[new_position]
 
 
@@ -32,7 +32,7 @@ def cifrar_num(caracter, clave):
     Funcion hecha por Joaquin Osorio
     """
     posicion = NUMEROS.find(caracter)
-    new_position = (posicion + clave) % len(NUMEROS)
+    new_position = (posicion + int(clave)) % len(NUMEROS)
     return NUMEROS[new_position]
     
 
