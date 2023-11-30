@@ -326,7 +326,7 @@ def mostrar_ventana_principal(id_usuario):
     ventana_principal.mainloop()
 
 
-def procesar_mensaje(id_usuario, opcion, mensaje, clave):
+def procesar_mensaje(opcion, id_usuario, mensaje, clave):
         resultado = ""
         
         if opcion == "Cifrar Atbash":
