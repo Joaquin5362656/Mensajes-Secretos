@@ -1,11 +1,14 @@
-ABECEDARIO_MIN = 'abcdefghijklmnopqrstuvwxyz'
-ABECEDARIO_MAY = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+import doctest
+
+# -*- coding: utf-8 -*-
+ABECEDARIO_MIN = 'abcdefghijklmnñopqrstuvwxyz'
+ABECEDARIO_MAY = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'
 NUMEROS = '1234567890'
 
 
 def cifrar_may(caracter, clave):    
     """
-    Funcion que recibe como parametros un caracter y una clave, ubica la posicion del caracter dentro de las
+    Joaquin Osorio: Funcion que recibe como parametros un caracter y una clave, ubica la posicion del caracter dentro de las
     constantes globales y con la clave se desplaza al nuevo indice correspondiente, esto retorna el caracter cifrado
     Funcion hecha por Joaquin Osorio
     """
@@ -16,7 +19,7 @@ def cifrar_may(caracter, clave):
 
 def cifrar_min(caracter, clave):
     """
-    Funcion que recibe como parametros un caracter y una clave, ubica la posicion del caracter dentro de las
+    Joaquin Osorio: Funcion que recibe como parametros un caracter y una clave, ubica la posicion del caracter dentro de las
     constantes globales y con la clave se desplaza al nuevo indice correspondiente, esto retorna el caracter cifrado
     Funcion hecha por Joaquin Osorio
     """
@@ -27,7 +30,7 @@ def cifrar_min(caracter, clave):
 
 def cifrar_num(caracter, clave):
     """
-    Funcion que recibe como parametros un caracter y una clave, ubica la posicion del caracter dentro de las
+    Joaquin Osorio: Funcion que recibe como parametros un caracter y una clave, ubica la posicion del caracter dentro de las
     constantes globales y con la clave se desplaza al nuevo indice correspondiente, esto retorna el caracter cifrado
     Funcion hecha por Joaquin Osorio
     """
@@ -39,7 +42,7 @@ def cifrar_num(caracter, clave):
 
 def detectar_caracter(caracter, clave):
     """
-    Funcion que reciber un caracter y una clave como parametros y comprueba si el caracter estan dentro
+    Joaquin Osorio: Funcion que reciber un caracter y una clave como parametros y comprueba si el caracter estan dentro
     de las constantes globables, dependiendo de que tipo de caracter sea, llama a su respectiva funcion
     que cifra el caracter y retorna el caracter cifrado
     Funcion hecha por Joaquin Osorio
@@ -58,7 +61,7 @@ def detectar_caracter(caracter, clave):
 
 def cifrar_string(string,clave):
     """
-    Funcion que se encarga de ietrar sobre el string que se le pasa como parametro y llama a la funcion detectar caracter
+    Joaquin Osorio: Funcion que se encarga de ietrar sobre el string que se le pasa como parametro y llama a la funcion detectar caracter
     y recibe el caracter cifrado con su respectiva clave. Concatena todos los caracteres cifrados y retorna el string cifrado 
     Funcion hecha por Joaquin Osorio
     
@@ -100,3 +103,11 @@ def cifrar_string(string,clave):
         string_result += new_caracter
     
     return string_result
+
+
+def main():
+    print(doctest.testmod())
+
+
+if __name__ == "__main__":
+    main()

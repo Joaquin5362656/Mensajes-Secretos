@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk, messagebox
 from cifrado_cesar import cifrar_string
 from cifrado_atbash import cifrado_atbash
-from validacion_de_datos import validar_registro_usuario
+from validacion_de_datos import validar_registro_usuario, checkear_bloqueo
 from funciones_de_envio import ventana_atbash
 from funciones_de_envio import ventana_cesar
 from consultar_mensajes_cifrados import consultar_mensajes_recibidos
@@ -12,9 +12,11 @@ import os
 
 # Función para la ventana de bienvenida
 def mostrar_ventana_bienvenida():
-    '''Abre la primer ventana para interactuar con el usuario. Contiene boton para continuar a la segunda ventana.
-        Diego López y Martin Ferreyra
-    '''
+    """
+    Diego López y Martin Ferreyra: Abre la primer ventana para interactuar con el usuario. 
+    Contiene boton para continuar a la segunda ventana.
+    """
+
     ventana_bienvenida = Tk()
     ventana_bienvenida.title("TP Grupal Parte 1- Grupo [Codeo]")
     ventana_bienvenida.iconbitmap("./logos/icono.ico")
@@ -37,6 +39,12 @@ def mostrar_ventana_bienvenida():
 
 
 def mostrar_ventana_registro():
+    """
+    Diego López: Ventana de registro para nuevos usuarios con su
+    correspondiente validacion posterior.
+
+    Martin Ferreyra: Modificaciones visuales.
+    """
 
     # Configuracion ventana
     ventana_registro = Toplevel()
@@ -85,6 +93,12 @@ def mostrar_ventana_registro():
 
 
 def mostrar_ventana_ingreso():
+    """
+    Diego López: Ventana de acceso en la que se colocan todos los
+    datos del usuario ingresante para su posterior checkeo.
+
+    Martin Ferreyra: Modificaciones visuales.
+    """
 
     # Configuracion ventana
     ventana_ingreso = Toplevel()
@@ -117,6 +131,10 @@ def mostrar_ventana_ingreso():
 
 
 def ventana_recuperar_clave():
+    """
+    Martin Ferreyra: Se abre una pestaña correspondiente a la recuperacion de clave,
+    el usuario ingresado para la recuperacion tiene que existir y no estar bloqueado.
+    """
 
     # Configuracion ventana
     ventana_recuperacion = Toplevel()
@@ -159,26 +177,51 @@ def ventana_recuperar_clave():
 
 
 def recuperar_clave(id_usuario, id_pregunta, respuesta_recuperacion):
+    """
+    Martin Ferreyra: Funcion ejecutada en el intento de recuperacion de clave
+    en la ventana 'Recuperacion de clave' que maneja los distintos escenarios,
+    es decir: Si se dio un usuario valido, si la pregunta o respuesta de
+    recuperacion son incorrectas, si el usuario se encuentra bloqueado, etc. 
+    """
+
     entradas_validas = False
+    bloqueado = checkear_bloqueo(id_usuario)
 
     with open('./archivos csv/usuarios.csv', 'r') as file:
         reader = csv.reader(file)
+
         for row in reader:
             if row and row[0] == id_usuario and row[2] == id_pregunta and row[3] == respuesta_recuperacion:
-                messagebox.showinfo("Éxito", f"Su contraseña es: {row[1]}")
-                actualizar_intentos_recuperacion(row, reinicio=True)
-                entradas_validas = True
+                if bloqueado:
+                    messagebox.showerror("Error", "Usuario bloqueado")
+                    entradas_validas = True
+
+                else:
+                    messagebox.showinfo("Éxito", f"Su contraseña es: {row[1]}")
+                    actualizar_intentos_recuperacion(row, reinicio=True)
+                    entradas_validas = True
 
             elif row and row[0] == id_usuario and (row[2] != id_pregunta or row[3] != respuesta_recuperacion):
-                messagebox.showerror("Error", "Respuesta incorrecta")
-                actualizar_intentos_recuperacion(row)
-                entradas_validas = True
+                if bloqueado:
+                    messagebox.showerror("Error", "Usuario bloqueado")
+                    entradas_validas = True
+
+                else:
+                    messagebox.showerror("Error", "Respuesta incorrecta")
+                    actualizar_intentos_recuperacion(row)
+                    entradas_validas = True
     
     if not entradas_validas:
         messagebox.showerror("Error", "Verifique los datos")
 
 
 def actualizar_intentos_recuperacion(datos_usuario, reinicio=False):
+    """
+    Martin Ferreyra: En caso de introducitse un usuario valido en la ventana de
+    'Recuperacion de clave', esta funcion evalua actualiza los intentos de
+    recuperacion, sumando uno o reiniciando la cuenta de intentos.
+    """
+
     registro_existente = False
 
     # Abrir los registros existentes de intentos de recuperacion
@@ -214,20 +257,14 @@ def actualizar_intentos_recuperacion(datos_usuario, reinicio=False):
 
 
 def validar_ingreso(ventana_ingreso, id_usuario_ingreso, clave_ingreso):
-    def checkear_bloqueo(id_usuario):
-        bloqueo = False
-        
-        with open("./archivos csv/recuperacion.csv", "r") as file:
-            reader = csv.reader(file)
+    """
+    Diego López: Funcion que valida el ingreso del usuario si sus datos, es decir,
+    su id_usuario y su clave, son las mismas que en el archivo usuarios.csv.
 
-            for row in reader:
-                if row and row[0] == id_usuario:
-                    if int(row[1]) > 3:
-                        bloqueo = True
-
-        return bloqueo
-
-
+    Martin Ferreyra: Agregado el escenario en el que el usuario introducido sea
+    un usuario bloqueado, cuyo caso se niega el acceso con una advertencia.
+    """
+    
     ingreso_exitoso = False
 
     # Determinamos si el usuario existe y si la clave es correcta
@@ -251,9 +288,9 @@ def validar_ingreso(ventana_ingreso, id_usuario_ingreso, clave_ingreso):
 
 def mostrar_ventana_principal(id_usuario):
     """
-    Función para la ventana principal y dentro de ella la función procesar_mensaje que, según la opción que se elija se hará
+    Diego López y Martín Ferreyra: Función para la ventana principal y dentro de 
+    ella la función procesar_mensaje que, según la opción que se elija se hará
     el cifrado o descifrado correspondiente.
-    Diego López y Martín Ferreyra
     """
 
     def procesar_mensaje(opcion, mensaje, clave):

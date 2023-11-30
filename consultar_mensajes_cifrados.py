@@ -3,12 +3,33 @@ import cifrado_cesar
 from tkinter import *
 CIFRADO_CESAR = "C"
 
+
+def leer_registro_mensaje(linea):
+    """
+    Martin Ferreyra: Funcion que procesa de forma correcta el caso en el que un mensaje
+    incluya una coma, devolviendo todas las columnas del archivo csv posteriores a la del
+    cifrado como un solo mensaje.
+    """
+    
+    informacion = linea.rstrip().split(",")
+    mensaje_cifrado = ", ".join(informacion[3:])
+
+    destinatario = informacion[0]
+    remitente = informacion[1]
+    cifrado = informacion[2]
+
+    return destinatario, remitente, cifrado, mensaje_cifrado
+
+
 def consultar_mensajes_recibidos(usuario):
     """
     Jennifer Mota: Funcion que recibe el usuario, verifica si el mensaje es para todos
     o para un usuario particular y si es cifrado Atbash o Cesar. De esa manera devuelve
     los mensajes recibidos decifrados y la cantidad de mensajes recibidos.
+    o para un usuario particular y si es cifrado Atbash o Cesar. De esa manera se obtiene
+    los mensajes recibidos decifrados y la cantidad de mensajes recibidos para poder mostrarlos en la interfaz.
     """
+
     mensajes_usuario_particular = []
     mensajes_para_todos = []
 
@@ -16,7 +37,7 @@ def consultar_mensajes_recibidos(usuario):
 
     with open("./archivos csv/mensajes.csv", "r") as mensajes:
         for linea in mensajes:
-            destinatario, remitente, cifrado, mensaje_cifrado = linea.rstrip("\n").split(",")
+            destinatario, remitente, cifrado, mensaje_cifrado = leer_registro_mensaje(linea)
 
             if usuario == destinatario:
                 if cifrado[0] == CIFRADO_CESAR:
@@ -47,7 +68,7 @@ def consultar_mensajes_recibidos(usuario):
 
 def mostrar_mensajes(mensajes_recibidos, mensajes_totales):
     """
-    Funcion que genera una ventana con una barra de navegacion para visualizar
+    Martin Ferreyra: Funcion que genera una ventana con una barra de navegacion para visualizar
     todos los mensajes recibidos por el usuario registrado
     """
     

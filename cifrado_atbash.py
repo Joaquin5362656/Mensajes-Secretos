@@ -1,28 +1,34 @@
-ORIGINAL_MINUSCULA = 'abcdefghijklmnopqrstuvwxyz'
-ORIGINAL_MAYUSCULA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-CLAVE_MAYUSCULA = 'ZYXWVUTSRQPONMLKJIHGFEDCBA'
-CLAVE_MINUSCULA = 'zyxwvutsrqponmlkjihgfedcba'
+import doctest
+
+# -*- coding: utf-8 -*-
+ORIGINAL_MINUSCULA = 'abcdefghijklmnñopqrstuvwxyz'
+ORIGINAL_MAYUSCULA = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'
+CLAVE_MAYUSCULA = 'ZYXWVUTSRQPOÑNMLKJIHGFEDCBA'
+CLAVE_MINUSCULA = 'zyxwvutsrqpoñnmlkjihgfedcba'
 
 def cifrado_atbash(texto):
     """
-    Jennifer Mota: Se genera el cifrado y descifrado de Atbash. Que consiste en la sustitucion de que cada letra del abecedario y se reemplaza por su inversa.
+    Jennifer Mota: Se genera el cifrado y descifrado de Atbash. Que consiste en la 
+    sustitucion de que cada letra del abecedario y se reemplaza por su inversa.
+
+    Martin Ferreyra: Funcionamiento del caracter 'ñ' añadido
 
     >>> cifrado_atbash("HOLA MUNDO")
-    'sloz nfmwl'
+    'sloz ñfnwl'
 
     >>> cifrado_atbash("hola mundo")
-    'SLOZ NFMWL'
+    'SLOZ ÑFNWL'
 
     >>> cifrado_atbash("hOlA 1 munDO -")
-    'SlOz 1 NFMwl -'
+    'SlOz 1 ÑFNwl -'
 
-    >>> cifrado_atbash("SLOZ NFMWL")
+    >>> cifrado_atbash("SLOZ ÑFNWL")
     'hola mundo'
 
-    >>> cifrado_atbash("SlOz 1 NFMwl -")
+    >>> cifrado_atbash("SlOz 1 ÑFNwl -")
     'hOlA 1 munDO -'
 
-    >>> cifrado_atbash("sloz nfmwl")
+    >>> cifrado_atbash("sloz ñfnwl")
     'HOLA MUNDO'
     """
     texto_cifrado = ""
@@ -38,4 +44,13 @@ def cifrado_atbash(texto):
 
         else:
             texto_cifrado += letra
-    return texto_cifrado   
+    return texto_cifrado
+
+
+def main():
+    # texto = input ("Introduce un texto: ")
+    print(doctest.testmod())
+
+
+if __name__ == "__main__":
+    main()

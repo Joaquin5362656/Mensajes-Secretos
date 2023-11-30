@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from cifrado_cesar import cifrar_string
 from cifrado_atbash import cifrado_atbash
+from validacion_de_datos import checkear_bloqueo
 import csv
 ARCHIVO_USUARIOS = "./archivos csv/usuarios.csv"
 ARCHIVO_MENSAJES = "./archivos csv/mensajes.csv"
@@ -9,8 +10,9 @@ ARCHIVO_MENSAJES = "./archivos csv/mensajes.csv"
 
 def leer_archivo(archivo):
     """
-    Esta función lee una línea del archivo CSV y devuelve un registro como lista.
+    Joaquin Osorio: Esta función lee una línea del archivo CSV y devuelve un registro como lista.
     """
+
     linea = archivo.readline()
     if linea:
         registro = linea.rstrip().split(",")
@@ -19,22 +21,12 @@ def leer_archivo(archivo):
     return registro
 
 
-def checkear_bloqueo(id_usuario):
-        bloqueo = False
-        
-        with open("./archivos csv/recuperacion.csv", "r") as file:
-            reader = csv.reader(file)
-
-            for row in reader:
-                if row and row[0] == id_usuario:
-                    if int(row[1]) > 3:
-                        bloqueo = True
-
-        return bloqueo
-
-
 def verificar_destinatario(destinatario, id_usuario):
-    """Funcion que verifica si el usuario al que se le desea enviar el msj existe en el archivo usuarios.csv"""
+    """
+    Joaquin Osorio: Funcion que verifica si el usuario al que se le desea enviar el msj existe 
+    en el archivo usuarios.csv.
+    """
+
     encontrado = False
 
     with open(ARCHIVO_USUARIOS,'r') as file:
@@ -63,7 +55,11 @@ def verificar_destinatario(destinatario, id_usuario):
 
 
 def ventana_cesar(id_usuario):
-    """Funcion que muestra una ventana para proseguir con el envio del mensaje con el cifrado cesar"""
+    """
+    Joaquin Osorio: Funcion que muestra una ventana para proseguir con el envio 
+    del mensaje con el cifrado cesar.
+    """
+
     # Configuraciones iniciales de la ventana
     ventana_cesar = Toplevel()
     ventana_cesar.title("Cifrado Cesar - Grupo: [Codeo]")
@@ -87,7 +83,10 @@ def ventana_cesar(id_usuario):
 
 
     def habilitar_opciones_cesar(destinatario):
-        """#Funcion que verifica a quien se les va a enviar el mensaje"""
+        """
+        Joaquin Osorio: Funcion que verifica a quien se les va a enviar el mensaje.
+        """
+
         encontrado = verificar_destinatario(destinatario, id_usuario)
 
         if encontrado:
@@ -107,9 +106,11 @@ def ventana_cesar(id_usuario):
 
 
     def enviar_mensaje_cesar(destinatario, oracion, clave, boton_enviar):
-        """Funcion que guarda los datos en un archivo.csv"""
+        """
+        Joaquin Osorio: Funcion que guarda los datos en un archivo.csv.
+        """
         
-        if oracion and clave:
+        if oracion and clave and clave.isnumeric():
             mensaje = cifrar_string(oracion, clave)
             cifrado_mas_clave = 'C' + clave
 
@@ -124,8 +125,11 @@ def ventana_cesar(id_usuario):
 
 
 def ventana_atbash(id_usuario):
-    """Funcion que muestra una ventana para proseguir con el envio del mensaje con el cifrado atbash"""
-    cifrado = 'cifrado_atbash'
+    """
+    Joaquin Osorio: Funcion que muestra una ventana para proseguir con el envio del mensaje
+    con el cifrado atbash.
+    """
+
     # Configuraciones iniciales de la ventana
     ventana_atbash = Toplevel()
     ventana_atbash.title("Cifrado Atbash - Grupo: [Codeo]")
@@ -149,7 +153,10 @@ def ventana_atbash(id_usuario):
 
 
     def habilitar_opciones_atbash(destinatario):
-        """Funcion que verifica a quien se les va a enviar el mensaje"""
+        """
+        Joaquin Osorio: Funcion que verifica a quien se les va a enviar el mensaje
+        """
+
         encontrado = verificar_destinatario(destinatario, id_usuario)
 
         if encontrado:
@@ -165,7 +172,9 @@ def ventana_atbash(id_usuario):
 
     
     def enviar_mensaje_atbash(destinatario, oracion, boton_enviar):
-        """Funcion que guarda los datos en un archivo.csv"""
+        """
+        Joaquin Osorio: Funcion que guarda los datos en un archivo.csv.
+        """
         
         if oracion:
             mensaje = cifrado_atbash(oracion)

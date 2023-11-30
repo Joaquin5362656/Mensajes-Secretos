@@ -6,7 +6,8 @@ from tkinter import END, messagebox
 
 def validar_identificador(identificador):
     """
-    Valida un identificador de usuario.
+    Diego López: Valida un identificador de usuario.
+    
     Requisitos:
 
     - Entre 5 y 10 caracteres
@@ -52,7 +53,8 @@ def validar_identificador(identificador):
 
 def validar_clave(clave):
     """
-    Valida una clave de usuario.
+    Diego López: Valida una clave de usuario.
+    
     Requisitos:
 
     - Entre 4 y 8 caracteres
@@ -116,24 +118,29 @@ def validar_clave(clave):
 
 
 def validar_registro_usuario(id_usuario, clave_usuario, id_pregunta, respuesta_recuperacion):
+    """
+    Diego López: Funcion que se asegura de recibir toda la informacion completa
+    para un registro de nuevo usuario.
+    """
+    
     registro_valido = True
 
     # Validar identificador
     if not validar_identificador(id_usuario):
         print("Identificador no válido. Asegúrese de cumplir con los requisitos.")
-        messagebox.showinfo("Error", "Identificador no válido. Asegúrese de cumplir con los requisitos.")
+        messagebox.showerror("Error", "Identificador no válido. Asegúrese de cumplir con los requisitos.")
         registro_valido = False
 
     # Validar contraseña
     if not validar_clave(clave_usuario):
         print("Contraseña no válida. Asegúrese de cumplir con los requisitos.")
-        messagebox.showinfo("Error", "Contraseña no válida. Asegúrese de cumplir con los requisitos.")
+        messagebox.showerror("Error", "Contraseña no válida. Asegúrese de cumplir con los requisitos.")
         registro_valido = False
     
     # Validar campo de pregunta y respuesta
     if id_pregunta == "Seleccione pregunta" or respuesta_recuperacion == "":
         print("Pregunta o respuesta de recuperacion vacias")
-        messagebox.showinfo("Error", "Pregunta o respuesta de recuperacion vacias.")
+        messagebox.showerror("Error", "Pregunta o respuesta de recuperacion vacias.")
         registro_valido = False
 
     # Checkear que no este el identificador en uso
@@ -182,6 +189,25 @@ def solicitar_clave():
             print("Clave válida. ¡Bienvenido!")
         else:
             print("Clave no válida. Asegúrese de cumplir con los requisitos.")
+
+
+def checkear_bloqueo(id_usuario):
+    """
+    Martin Ferreyra: Funcion que lee el archivo de intentos de recuperacion
+    y devuelve True o False en funcion de si el usuario esta bloqueado o no.
+    """
+
+    bloqueo = False
+        
+    with open("./archivos csv/recuperacion.csv", "r") as file:
+        reader = csv.reader(file)
+
+        for row in reader:
+            if row and row[0] == id_usuario:
+                if int(row[1]) > 3:
+                    bloqueo = True
+
+    return bloqueo
 
 
 def main():
