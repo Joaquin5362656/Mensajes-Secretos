@@ -204,7 +204,7 @@ def checkear_bloqueo(id_usuario):
 
         for row in reader:
             if row and row[0] == id_usuario:
-                if int(row[1]) > 3:
+                if int(row[1]) > 2:
                     bloqueo = True
 
     return bloqueo
