@@ -10,7 +10,7 @@ def validar_identificador(identificador):
     
     Requisitos:
 
-    - Entre 5 y 10 caracteres
+    - Entre 5 y 15 caracteres
     - Formado solo por letras y numeros
     - Puede incluir los caracteres '_' '-' '.'
 
