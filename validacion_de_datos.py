@@ -127,19 +127,16 @@ def validar_registro_usuario(id_usuario, clave_usuario, id_pregunta, respuesta_r
 
     # Validar identificador
     if not validar_identificador(id_usuario):
-        print("Identificador no válido. Asegúrese de cumplir con los requisitos.")
         messagebox.showerror("Error", "Identificador no válido. Asegúrese de cumplir con los requisitos.")
         registro_valido = False
 
     # Validar contraseña
     if not validar_clave(clave_usuario):
-        print("Contraseña no válida. Asegúrese de cumplir con los requisitos.")
         messagebox.showerror("Error", "Contraseña no válida. Asegúrese de cumplir con los requisitos.")
         registro_valido = False
     
     # Validar campo de pregunta y respuesta
     if id_pregunta == "Seleccione pregunta" or respuesta_recuperacion == "":
-        print("Pregunta o respuesta de recuperacion vacias")
         messagebox.showerror("Error", "Pregunta o respuesta de recuperacion vacias.")
         registro_valido = False
 
