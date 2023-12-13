@@ -38,6 +38,17 @@ def mostrar_ventana_bienvenida():
     ventana_bienvenida.mainloop()
 
 
+def cargar_preguntas():
+    """
+    Funcion modularizada,que carga las preguntas del archivo y devuelve la coleccion.
+    """
+    with open("./archivos csv/preguntas.csv") as file:
+        preguntas = []
+        reader = csv.reader(file)
+        for row in reader:
+            preguntas.append(row[1])
+    return preguntas
+
 def mostrar_ventana_registro():
     """
     Diego López: Ventana de registro para nuevos usuarios con su
@@ -59,7 +70,6 @@ def mostrar_ventana_registro():
     ventana_registro.columnconfigure(0, weight=1)
     ventana_registro.columnconfigure(3, weight=1)  
 
-
     # Labels y botones
     Label(ventana_registro, text="Ingrese un usuario:").grid(row=1, column=1, sticky=W+E, pady=5, padx=5)
     Label(ventana_registro, text="Ingrese una clave").grid(row=2, column=1, sticky=W+E, pady=5, padx=5)
@@ -71,12 +81,7 @@ def mostrar_ventana_registro():
     entry_clave.grid(row=2, column=2)
 
     # Menu desplegable
-    with open("./archivos csv/preguntas.csv") as file:
-        preguntas = []
-        reader = csv.reader(file)
-        for row in reader:
-            preguntas.append(row[1])
-
+    preguntas = cargar_preguntas()
     desplegable_preguntas = ttk.Combobox(ventana_registro, values=preguntas)
     desplegable_preguntas.set("Seleccione pregunta")
     desplegable_preguntas.grid(row=3, column=1, sticky=W+E, pady=5, padx=5)
@@ -90,6 +95,8 @@ def mostrar_ventana_registro():
     # Requisitos
     Label(ventana_registro, text="El identificador debe estar compuesto solo de\nletras, numeros o los caracteres '_' '-' y '.'\ny debe tener minimo 5 y maximo 15 caracteres", justify="left", fg="#8c8c8c").grid(row=6, column=1, columnspan=2, sticky=W+E, pady=5)
     Label(ventana_registro, text="Requisitos de la clave:\n- De 4 a 8 caracteres\t- Al menos un numero\n- Al menos una mayuscula\t- Incluye '_' '-' '#' o '*'\n- Al menos una minuscula\t- Adyacentes no repetidos", justify="left", fg="#8c8c8c").grid(row=7, column=1, columnspan=2)
+
+# Llama a la función de la ventana de bienvenida para iniciar la aplicación
 
 
 def mostrar_ventana_ingreso():

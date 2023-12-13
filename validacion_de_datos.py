@@ -44,11 +44,16 @@ def validar_identificador(identificador):
 
     caracteres_permitidos = "_-."
 
-    for caracter in identificador:
+    # Iterar por cada caracter en lugar de iterar toda la cadena
+    i = 0
+    while es_valido and i < longitud:
+        caracter = identificador[i]
         if not (caracter.isalnum() or caracter in caracteres_permitidos):
             es_valido = False
+        i += 1
 
     return es_valido and es_largo
+
 
 
 def validar_clave(clave):
@@ -87,7 +92,7 @@ def validar_clave(clave):
     """
 
     # Variables de requisitos
-    longitud_valida = False
+    longitud_valida = 4 <= len(clave) <= 8
     tiene_mayuscula = False
     tiene_minuscula = False
     tiene_numero = False
@@ -96,15 +101,11 @@ def validar_clave(clave):
 
     caracteres_especiales = "_-*#"
 
-    if 4 <= len(clave) <= 8:
-        longitud_valida = True
+    # Verificar caracteres repetidos adyacentes y cumplir longitud válida
+    i = 0
+    while i < len(clave) and longitud_valida:
+        caracter = clave[i]
 
-    # Verificar caracteres repetidos adyacentes
-    for i in range(len(clave) - 1):
-        if clave[i] == clave[i + 1]:
-            no_caracteres_adyacentes = False
-
-    for caracter in clave:
         if caracter.isupper():
             tiene_mayuscula = True
         elif caracter.islower():
@@ -114,7 +115,14 @@ def validar_clave(clave):
         elif caracter in caracteres_especiales:
             tiene_caracter_especial = True
 
-    return tiene_mayuscula and tiene_minuscula and tiene_numero and tiene_caracter_especial and longitud_valida and no_caracteres_adyacentes
+        # Verificar caracteres repetidos adyacentes
+        if i < len(clave) - 1 and caracter == clave[i + 1]:
+            no_caracteres_adyacentes = False
+
+        i += 1
+
+    return tiene_mayuscula and tiene_minuscula and tiene_numero and tiene_caracter_especial and no_caracteres_adyacentes
+
 
 
 def validar_registro_usuario(id_usuario, clave_usuario, id_pregunta, respuesta_recuperacion):
@@ -137,25 +145,38 @@ def validar_registro_usuario(id_usuario, clave_usuario, id_pregunta, respuesta_r
     
     # Validar campo de pregunta y respuesta
     if id_pregunta == "Seleccione pregunta" or respuesta_recuperacion == "":
-        messagebox.showerror("Error", "Pregunta o respuesta de recuperacion vacias.")
+        messagebox.showerror("Error", "Pregunta o respuesta de recuperacion vacías.")
         registro_valido = False
 
-    # Checkear que no este el identificador en uso
-    with open('./archivos csv/usuarios.csv', 'r') as file:
-        reader = csv.reader(file)
-        for row in reader:
-            if row and row[0] == id_usuario:
-                print("Identificador en uso")
-                messagebox.showinfo("Error", "Identificador en uso")
-                registro_valido = False
-
+    # Checkear que no esté el identificador en uso
+    if not validar_identificador_en_uso(id_usuario):
+        messagebox.showinfo("Error", "Identificador en uso")
+        registro_valido = False
 
     if registro_valido:
-        with open('./archivos csv/usuarios.csv', 'a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([id_usuario, clave_usuario, id_pregunta, respuesta_recuperacion, 0])
+        guardar_nuevo_registro(id_usuario, clave_usuario, id_pregunta, respuesta_recuperacion)
 
-        messagebox.showinfo("Éxito", "Usuario creado con éxito")
+def validar_identificador_en_uso(id_usuario):
+    """
+    Realiza una búsqueda secuencial en el archivo de usuarios para verificar si el identificador está en uso.
+    Retorna True si el identificador no está en uso, y False si ya está en uso.
+    """
+    with open('./archivos csv/usuarios.csv', 'r') as file:
+        reader = csv.reader(file)
+        row = next(reader, None)
+        while row and row[0] != id_usuario:
+            row = next(reader, None)
+    return row is None
+
+def guardar_nuevo_registro(id_usuario, clave_usuario, id_pregunta, respuesta_recuperacion):
+    """
+    Guarda un nuevo registro en el archivo de usuarios.
+    """
+    with open('./archivos csv/usuarios.csv', 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([id_usuario, clave_usuario, id_pregunta, respuesta_recuperacion, 0])
+
+    messagebox.showinfo("Éxito", "Usuario creado con éxito")
 
 
 # Funcion con propositos de testeo
