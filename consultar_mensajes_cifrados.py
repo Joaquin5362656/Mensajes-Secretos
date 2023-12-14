@@ -39,26 +39,17 @@ def consultar_mensajes_recibidos(usuario):
         for linea in mensajes:
             destinatario, remitente, cifrado, mensaje_cifrado = leer_registro_mensaje(linea)
 
-            if usuario == destinatario:
+            if (usuario == destinatario) or (destinatario == "*" and remitente != usuario):
                 if cifrado[0] == CIFRADO_CESAR:
                     mensaje_decifrado = cifrado_cesar.cifrar_string(mensaje_cifrado, -int(cifrado[1]))
-                    mensaje = remitente + ": " + mensaje_decifrado
-                    mensajes_usuario_particular.append(mensaje)
+
                 else:
                     mensaje_decifrado = cifrado_atbash.cifrado_atbash(mensaje_cifrado)
                     mensaje = remitente + ": " + mensaje_decifrado
-                    mensajes_usuario_particular.append(mensaje)
-                mensajes_totales += 1
-
-            elif destinatario == "*" and remitente != usuario:
-                if cifrado[0] == CIFRADO_CESAR:
-                    mensaje_descifrado = cifrado_cesar.cifrar_string(mensaje_cifrado, -int(cifrado[1]))
-                    mensaje = "#" + remitente +": " + mensaje_descifrado
-                    mensajes_para_todos.append(mensaje)     
-                else:
-                    mensaje_descifrado = cifrado_atbash.cifrado_atbash(mensaje_cifrado)
-                    mensaje = "#" + remitente +": " + mensaje_descifrado
-                    mensajes_para_todos.append(mensaje)
+                    
+                prefijo = "" if usuario == destinatario else "#"
+                mensaje = prefijo + remitente + ": " + mensaje_decifrado
+                mensajes_usuario_particular.append(mensaje)
                 mensajes_totales += 1
 
         mensajes_recibidos = mensajes_para_todos + mensajes_usuario_particular
