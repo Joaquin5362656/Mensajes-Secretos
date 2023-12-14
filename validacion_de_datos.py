@@ -39,20 +39,22 @@ def validar_identificador(identificador):
     es_valido = True
     
     # Checkear cantidad de caracteres
-    longitud = len(identificador)
-    es_largo = 5 <= longitud <= 15
+    es_largo = 5 <= len(identificador) <= 15
 
     caracteres_permitidos = "_-."
 
     # Iterar por cada caracter en lugar de iterar toda la cadena
     i = 0
-    while es_valido and i < longitud:
-        caracter = identificador[i]
-        if not (caracter.isalnum() or caracter in caracteres_permitidos):
-            es_valido = False
-        i += 1
+    if es_largo:
+        while es_valido and i < len(identificador):
+            caracter = identificador[i]
+            if not (caracter.isalnum() or caracter in caracteres_permitidos):
+                es_valido = False
+            i += 1
+    else:
+        es_valido = False
 
-    return es_valido and es_largo
+    return es_valido
 
 
 
@@ -131,42 +133,40 @@ def validar_registro_usuario(id_usuario, clave_usuario, id_pregunta, respuesta_r
     para un registro de nuevo usuario.
     """
     
-    registro_valido = True
+    # Busca usuario existente con mismo id
+    if not buscar_usuario(id_usuario):
+        
+        # Verifica que los distintos campos sean validos
+        if not validar_identificador(id_usuario):
+            messagebox.showerror("Error", "Identificador no válido. Asegúrese de cumplir con los requisitos.")
 
-    # Validar identificador
-    if not validar_identificador(id_usuario):
-        messagebox.showerror("Error", "Identificador no válido. Asegúrese de cumplir con los requisitos.")
-        registro_valido = False
+        # Validar contraseña
+        elif not validar_clave(clave_usuario):
+            messagebox.showerror("Error", "Contraseña no válida. Asegúrese de cumplir con los requisitos.")
 
-    # Validar contraseña
-    if not validar_clave(clave_usuario):
-        messagebox.showerror("Error", "Contraseña no válida. Asegúrese de cumplir con los requisitos.")
-        registro_valido = False
-    
-    # Validar campo de pregunta y respuesta
-    if id_pregunta == "Seleccione pregunta" or respuesta_recuperacion == "":
-        messagebox.showerror("Error", "Pregunta o respuesta de recuperacion vacías.")
-        registro_valido = False
-
-    # Checkear que no esté el identificador en uso
-    if not validar_identificador_en_uso(id_usuario):
+        # Validar campo de pregunta y respuesta
+        elif id_pregunta == "Seleccione pregunta" or respuesta_recuperacion == "":
+            messagebox.showerror("Error", "Pregunta o respuesta de recuperacion vacías.")
+        
+        else:
+            guardar_nuevo_registro(id_usuario, clave_usuario, id_pregunta, respuesta_recuperacion)
+        
+    else:
         messagebox.showinfo("Error", "Identificador en uso")
-        registro_valido = False
 
-    if registro_valido:
-        guardar_nuevo_registro(id_usuario, clave_usuario, id_pregunta, respuesta_recuperacion)
 
-def validar_identificador_en_uso(id_usuario):
+def buscar_usuario(id_usuario):
     """
     Realiza una búsqueda secuencial en el archivo de usuarios para verificar si el identificador está en uso.
     Retorna True si el identificador no está en uso, y False si ya está en uso.
     """
     with open('./archivos csv/usuarios.csv', 'r') as file:
         reader = csv.reader(file)
-        row = next(reader, None)
+        row = next(reader, False)
         while row and row[0] != id_usuario:
-            row = next(reader, None)
-    return row is None
+            row = next(reader, False)
+    return row
+
 
 def guardar_nuevo_registro(id_usuario, clave_usuario, id_pregunta, respuesta_recuperacion):
     """

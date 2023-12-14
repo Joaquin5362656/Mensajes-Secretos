@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk, messagebox
 from cifrado_cesar import cifrar_string
 from cifrado_atbash import cifrado_atbash
-from validacion_de_datos import validar_registro_usuario, checkear_bloqueo
+from validacion_de_datos import validar_registro_usuario, checkear_bloqueo, buscar_usuario
 from funciones_de_envio import ventana_atbash
 from funciones_de_envio import ventana_cesar
 from consultar_mensajes_cifrados import consultar_mensajes_recibidos
@@ -10,7 +10,6 @@ import csv
 import os
 
 
-# Función para la ventana de bienvenida
 def mostrar_ventana_bienvenida():
     """
     Diego López y Martin Ferreyra: Abre la primer ventana para interactuar con el usuario. 
@@ -38,17 +37,6 @@ def mostrar_ventana_bienvenida():
     ventana_bienvenida.mainloop()
 
 
-def cargar_preguntas():
-    """
-    Funcion modularizada,que carga las preguntas del archivo y devuelve la coleccion.
-    """
-    with open("./archivos csv/preguntas.csv") as file:
-        preguntas = []
-        reader = csv.reader(file)
-        for row in reader:
-            preguntas.append(row[1])
-    return preguntas
-
 def mostrar_ventana_registro():
     """
     Diego López: Ventana de registro para nuevos usuarios con su
@@ -68,7 +56,7 @@ def mostrar_ventana_registro():
     ventana_registro.rowconfigure(4, weight=1)
     ventana_registro.rowconfigure(8, weight=1)
     ventana_registro.columnconfigure(0, weight=1)
-    ventana_registro.columnconfigure(3, weight=1)  
+    ventana_registro.columnconfigure(3, weight=1)
 
     # Labels y botones
     Label(ventana_registro, text="Ingrese un usuario:").grid(row=1, column=1, sticky=W+E, pady=5, padx=5)
@@ -96,7 +84,17 @@ def mostrar_ventana_registro():
     Label(ventana_registro, text="El identificador debe estar compuesto solo de\nletras, numeros o los caracteres '_' '-' y '.'\ny debe tener minimo 5 y maximo 15 caracteres", justify="left", fg="#8c8c8c").grid(row=6, column=1, columnspan=2, sticky=W+E, pady=5)
     Label(ventana_registro, text="Requisitos de la clave:\n- De 4 a 8 caracteres\t- Al menos un numero\n- Al menos una mayuscula\t- Incluye '_' '-' '#' o '*'\n- Al menos una minuscula\t- Adyacentes no repetidos", justify="left", fg="#8c8c8c").grid(row=7, column=1, columnspan=2)
 
-# Llama a la función de la ventana de bienvenida para iniciar la aplicación
+
+def cargar_preguntas():
+    """
+    Funcion modularizada,que carga las preguntas del archivo y devuelve la coleccion.
+    """
+    with open("./archivos csv/preguntas.csv") as file:
+        preguntas = []
+        reader = csv.reader(file)
+        for row in reader:
+            preguntas.append(row[1])
+    return preguntas
 
 
 def mostrar_ventana_ingreso():
@@ -119,7 +117,6 @@ def mostrar_ventana_ingreso():
     ventana_ingreso.rowconfigure(6, weight=1)
     ventana_ingreso.columnconfigure(0, weight=1)
     ventana_ingreso.columnconfigure(3, weight=1)
-
 
     # Labels y entrys
     Label(ventana_ingreso, text="Ingrese su usuario:").grid(row=1, column=1, sticky=W+E, pady=5, ipadx=10, ipady=1)
@@ -167,12 +164,8 @@ def ventana_recuperar_clave():
 
     
     # Desplegable de preguntas
-    with open("./archivos csv/preguntas.csv") as file:
-        preguntas = []
-        reader = csv.reader(file)
-        for row in reader:
-            preguntas.append(row[1])
-
+    
+    preguntas = cargar_preguntas()
     desplegable_preguntas = ttk.Combobox(ventana_recuperacion, values=preguntas)
     desplegable_preguntas.set("Seleccione pregunta")
     desplegable_preguntas.grid(row=3, column=1, sticky=W+E, pady=5, padx=5)
@@ -191,34 +184,27 @@ def recuperar_clave(id_usuario, id_pregunta, respuesta_recuperacion):
     recuperacion son incorrectas, si el usuario se encuentra bloqueado, etc. 
     """
 
-    entradas_validas = False
-    bloqueado = checkear_bloqueo(id_usuario)
+    if id_usuario:
+        usuario = buscar_usuario(id_usuario)
 
-    with open('./archivos csv/usuarios.csv', 'r') as file:
-        reader = csv.reader(file)
+        if usuario:
+            bloqueado = checkear_bloqueo(id_usuario)
 
-        for row in reader:
-            if row and row[0] == id_usuario and row[2] == id_pregunta and row[3] == respuesta_recuperacion:
-                if bloqueado:
-                    messagebox.showerror("Error", "Usuario bloqueado")
-                    entradas_validas = True
+            if not bloqueado:
 
-                else:
-                    messagebox.showinfo("Éxito", f"Su contraseña es: {row[1]}")
-                    actualizar_intentos_recuperacion(row, reinicio=True)
-                    entradas_validas = True
-
-            elif row and row[0] == id_usuario and (row[2] != id_pregunta or row[3] != respuesta_recuperacion):
-                if bloqueado:
-                    messagebox.showerror("Error", "Usuario bloqueado")
-                    entradas_validas = True
-
+                if usuario[2] == id_pregunta and usuario[3] == respuesta_recuperacion:
+                    messagebox.showinfo("Éxito", f"Su constraseña es: {usuario[1]}")
+                    actualizar_intentos_recuperacion(usuario, reinicio=True)
                 else:
                     messagebox.showerror("Error", "Respuesta incorrecta")
-                    actualizar_intentos_recuperacion(row)
-                    entradas_validas = True
+                    actualizar_intentos_recuperacion(usuario)
+            else:
+                messagebox.showerror("Error", "Usuario bloqueado")
+        
+        else:
+            messagebox.showerror("Error", "Verifique los datos")
     
-    if not entradas_validas:
+    else:
         messagebox.showerror("Error", "Verifique los datos")
 
 
@@ -244,10 +230,10 @@ def actualizar_intentos_recuperacion(datos_usuario, reinicio=False):
                 if row and row[0] == datos_usuario[0] and int(row[1]) <= 3:
                     if reinicio:
                         writer.writerow([datos_usuario[0],0])
-                        registro_existente = True
                     else:
                         writer.writerow([datos_usuario[0],int(row[1]) + 1])
-                        registro_existente = True
+                    registro_existente = True
+
                 elif row and row[0] == datos_usuario[0] and int(row[1]) > 3:
                     messagebox.showerror("Error", "Usuario Bloqueado")
                     writer.writerow([datos_usuario[0],int(row[1]) + 1])
@@ -263,7 +249,7 @@ def actualizar_intentos_recuperacion(datos_usuario, reinicio=False):
     os.rename("./archivos csv/actualizacion.csv", "./archivos csv/recuperacion.csv")
 
 
-def validar_ingreso(ventana_ingreso, id_usuario_ingreso, clave_ingreso):
+def validar_ingreso(ventana_ingreso, id_usuario, clave):
     """
     Diego López: Funcion que valida el ingreso del usuario si sus datos, es decir,
     su id_usuario y su clave, son las mismas que en el archivo usuarios.csv.
@@ -271,26 +257,22 @@ def validar_ingreso(ventana_ingreso, id_usuario_ingreso, clave_ingreso):
     Martin Ferreyra: Agregado el escenario en el que el usuario introducido sea
     un usuario bloqueado, cuyo caso se niega el acceso con una advertencia.
     """
+    usuario = buscar_usuario(id_usuario)
+
+    if usuario:
+        if checkear_bloqueo(id_usuario):
+            messagebox.showerror("Error", "Usuario bloqueado")
+        
+        elif usuario[1] == clave:
+            messagebox.showinfo("Éxito", "Ingreso exitoso")
+            ventana_ingreso.destroy()
+            mostrar_ventana_principal(id_usuario)
+
+        else:
+            messagebox.showerror("Error", "Ingreso fallido. Verifique sus credenciales")
     
-    ingreso_exitoso = False
-
-    # Determinamos si el usuario existe y si la clave es correcta
-    with open('./archivos csv/usuarios.csv', 'r') as file:
-        reader = csv.reader(file)
-        for row in reader:
-            if row and row[0] == id_usuario_ingreso and row[1] == clave_ingreso:
-                ingreso_exitoso = True
-                bloqueado = checkear_bloqueo(id_usuario_ingreso)
-
-                if bloqueado:
-                    messagebox.showerror("Error", "Usuario bloqueado")
-                else:
-                    messagebox.showinfo("Éxito", "Ingreso exitoso")
-                    ventana_ingreso.destroy()  # Cerrar la ventana de ingreso
-                    mostrar_ventana_principal(id_usuario_ingreso)  # Abrir la ventana principal
-
-    if not ingreso_exitoso:
-        messagebox.showerror("Error", "Ingreso fallido. Verifica tus credenciales.")
+    else:
+        messagebox.showerror("Error", "Ingreso fallido. Verifique sus credenciales")
 
 
 def mostrar_ventana_principal(id_usuario):
