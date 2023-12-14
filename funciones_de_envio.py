@@ -2,57 +2,13 @@ from tkinter import *
 from tkinter import messagebox
 from cifrado_cesar import cifrar_string
 from cifrado_atbash import cifrado_atbash
-from validacion_de_datos import checkear_bloqueo
+from validacion_de_datos import checkear_bloqueo, buscar_usuario
 import csv
 ARCHIVO_USUARIOS = "./archivos csv/usuarios.csv"
 ARCHIVO_MENSAJES = "./archivos csv/mensajes.csv"
-
-
-def leer_archivo(archivo):
-    """
-    Joaquin Osorio: Esta función lee una línea del archivo CSV y devuelve un registro como lista.
-    """
-
-    linea = archivo.readline()
-    if linea:
-        registro = linea.rstrip().split(",")
-    else:
-        registro = []
-    return registro
-
-
-def verificar_destinatario(destinatario, id_usuario):
-    """
-    Joaquin Osorio: Funcion que verifica si el usuario al que se le desea enviar el msj existe 
-    en el archivo usuarios.csv.
-    """
-
-    encontrado = False
-
-    with open(ARCHIVO_USUARIOS,'r') as file:
-        registro = leer_archivo(file)
-
-        while registro and not encontrado:
-            if registro[0] == destinatario or destinatario == "*":
-                encontrado = True
-            registro = leer_archivo(file)
-
-
-    bloqueado = checkear_bloqueo(destinatario)
-
-    if bloqueado:
-        encontrado = False
-        messagebox.showerror("Error", "El destinatario está bloqueado")
-
-    elif destinatario == id_usuario:
-        encontrado = False
-        messagebox.showerror("Error", "El destinatario es usted mismo")
-
-    elif not encontrado:
-        messagebox.showerror("Error", "Destinatario Inexistente")
-
-    return encontrado
-
+"""
+Martin Ferreyra: Reformulacion completa del archivo
+"""
 
 def ventana_cesar(id_usuario):
     """
@@ -65,7 +21,7 @@ def ventana_cesar(id_usuario):
     ventana_cesar.title("Cifrado Cesar - Grupo: [Codeo]")
     ventana_cesar.iconbitmap("./logos/logo.ico")
     ventana_cesar.resizable(0, 0)
-    ventana_cesar.geometry("400x150")
+    ventana_cesar.geometry("400x200")
     ventana_cesar.config(bg="#00FA9A")
     ventana_cesar.columnconfigure(0, weight=1)
     ventana_cesar.columnconfigure(4, weight=1)
@@ -74,54 +30,21 @@ def ventana_cesar(id_usuario):
 
     # Labels
     Label(ventana_cesar, text="Ingrese el destinatario:").grid(row=1, column=1, sticky=W+E, pady=5, ipadx=10, ipady=1)
+    Label(ventana_cesar, text="Ingrese una oración:").grid(row=2, column=1, sticky=W+E, pady=5, ipadx=10, ipady=1)
+    Label(ventana_cesar, text="Ingrese una Clave:").grid(row=3, column=1, sticky=W+E, pady=5, ipadx=10, ipady=1)
+
     entry_destinatario = Entry(ventana_cesar)
     entry_destinatario.grid(row=1, column=2, sticky=E, padx=5)
 
+    entry_oracion = Entry(ventana_cesar)
+    entry_oracion.grid(row=2, column=2, columnspan=2, sticky=W+E, padx=5)
+    
+    entry_clave = Entry(ventana_cesar)
+    entry_clave.grid(row=3, column=2, sticky=E, padx=5)
+
     # Botón para verificar el destinatario
-    boton_verificar = Button(ventana_cesar, text="Verificar", command=lambda: habilitar_opciones_cesar(entry_destinatario.get()))
-    boton_verificar.grid(row=1, column=3, padx=5, sticky=W+E)
-
-
-    def habilitar_opciones_cesar(destinatario):
-        """
-        Joaquin Osorio: Funcion que verifica a quien se les va a enviar el mensaje.
-        """
-
-        encontrado = verificar_destinatario(destinatario, id_usuario)
-
-        if encontrado:
-            entry_destinatario.config(state=DISABLED)
-            boton_verificar.config(state=DISABLED)
-
-            # Mostrar el Label y el Entry para escribir una oración
-            Label(ventana_cesar, text="Ingrese una oración:").grid(row=2, column=1, sticky=W+E, pady=5, ipadx=10, ipady=1)
-            entry_oracion = Entry(ventana_cesar)
-            entry_oracion.grid(row=2, column=2, columnspan=2, sticky=W+E, padx=5)
-            Label(ventana_cesar, text="Ingrese una Clave:").grid(row=3, column=1, sticky=W+E, pady=5, ipadx=10, ipady=1)
-            entry_clave = Entry(ventana_cesar)
-            entry_clave.grid(row=3, column=2, sticky=E, padx=5)
-
-            boton_enviar = Button(ventana_cesar, text="Enviar", command=lambda: enviar_mensaje_cesar(entry_destinatario.get(), entry_oracion.get(), entry_clave.get(), boton_enviar))
-            boton_enviar.grid(row=3, column=3, padx=5, sticky=W+E)
-
-
-    def enviar_mensaje_cesar(destinatario, oracion, clave, boton_enviar):
-        """
-        Joaquin Osorio: Funcion que guarda los datos en un archivo.csv.
-        """
-        
-        if oracion and clave and clave.isnumeric():
-            mensaje = cifrar_string(oracion, clave)
-            cifrado_mas_clave = 'C' + clave
-
-            with open(ARCHIVO_MENSAJES, "a") as archivo_mensaje:
-                archivo_mensaje.write(f'{destinatario},{id_usuario},{cifrado_mas_clave},{mensaje}\n')
-            
-            entry_destinatario.config(state=NORMAL)
-            boton_verificar.config(state=NORMAL)
-            boton_enviar.config(state=DISABLED)
-
-            messagebox.showinfo("Éxito", "Envio exitoso")
+    boton_verificar = Button(ventana_cesar, text="Enviar", command=lambda: verificar_destinatario(entry_destinatario.get(), id_usuario, entry_oracion.get(), 0, entry_clave.get()))
+    boton_verificar.grid(row=4, column=1, columnspan=2, pady=5, sticky=W+E)
 
 
 def ventana_atbash(id_usuario):
@@ -140,51 +63,80 @@ def ventana_atbash(id_usuario):
     ventana_atbash.columnconfigure(0, weight=1)
     ventana_atbash.columnconfigure(4, weight=1)
     ventana_atbash.rowconfigure(0, weight=1)
-    ventana_atbash.rowconfigure(7, weight=1)
+    ventana_atbash.rowconfigure(4, weight=1)
 
     #labels
     Label(ventana_atbash, text="Ingrese el destinatario:").grid(row=1, column=1, sticky=W+E, pady=5, ipadx=10, ipady=3)
+    Label(ventana_atbash, text="Ingrese una oración:").grid(row=2, column=1, sticky=W+E, pady=5, ipadx=10, ipady=3)
+
     entry_destinatario = Entry(ventana_atbash)
     entry_destinatario.grid(row=1, column=2, sticky=E, padx=5)
 
+    entry_oracion = Entry(ventana_atbash)
+    entry_oracion.grid(row=2, column=2, sticky=E, padx=5)
+
     # Botón para verificar el destinatario
-    boton_verificar = Button(ventana_atbash, text="Verificar", command= lambda: habilitar_opciones_atbash(entry_destinatario.get()))
-    boton_verificar.grid(row=1, column=3, padx=5)
+    boton_verificar = Button(ventana_atbash, text="Verificar", command= lambda: verificar_destinatario(entry_destinatario.get(), id_usuario, entry_oracion.get(), 1))
+    boton_verificar.grid(row=3, column=1, columnspan=2, sticky=W+E, pady=5)
 
 
-    def habilitar_opciones_atbash(destinatario):
-        """
-        Joaquin Osorio: Funcion que verifica a quien se les va a enviar el mensaje
-        """
+def verificar_destinatario(id_destinatario, id_usuario, oracion, cifrador, clave=False):
+    """
+    Joaquin Osorio: Funcion que verifica si el usuario al que se le desea enviar el msj existe 
+    en el archivo usuarios.csv.
+    """
 
-        encontrado = verificar_destinatario(destinatario, id_usuario)
+    """
+    Martin Ferreyra: Esta comprobacion esta hecha intencionalmente de esta manera aprovechando el
+    short-circuit, si el destinatario es '*' no se buscará innecesariamente en el archivo csv
+    """
+    if (id_destinatario == "*" or buscar_usuario(id_destinatario)):
+        if id_destinatario == id_usuario:
+            messagebox.showerror("Error", "El destinatario es usted mismo")
 
-        if encontrado:
-            entry_destinatario.config(state=DISABLED)
-            boton_verificar.config(state=DISABLED)
-
-            # Mostrar el Label y el Entry para escribir una oración
-            Label(ventana_atbash, text="Ingrese una oración:").grid(row=2, column=1, sticky=W+E, pady=5, ipadx=10, ipady=3)
-            entry_oracion = Entry(ventana_atbash)
-            entry_oracion.grid(row=2, column=2, sticky=E, padx=5)
-            boton_enviar = Button(ventana_atbash, text="Enviar", command=lambda: enviar_mensaje_atbash(entry_destinatario.get(), entry_oracion.get(), boton_enviar))
-            boton_enviar.grid(row=2, column=3, padx=5, sticky=W+E)
-
-    
-    def enviar_mensaje_atbash(destinatario, oracion, boton_enviar):
-        """
-        Joaquin Osorio: Funcion que guarda los datos en un archivo.csv.
-        """
+        elif checkear_bloqueo(id_destinatario):
+            messagebox.showerror("Error", "Destinatario bloqueado")
         
-        if oracion:
-            mensaje = cifrado_atbash(oracion)
-
-            with open(ARCHIVO_MENSAJES, "a") as archivo_mensaje:
-                archivo_mensaje.write(f'{destinatario},{id_usuario},A,{mensaje}\n')
+        else:
+            if not oracion:
+                messagebox.showerror("Error", "Introduzca un mensaje")
             
-            entry_destinatario.config(state=NORMAL)
-            boton_verificar.config(state=NORMAL)
-            boton_enviar.config(state=DISABLED)
+            else:
+                if cifrador == 0:
+                    enviar_mensaje_cesar(id_destinatario, id_usuario, oracion, clave)
+                elif cifrador == 1:
+                    enviar_mensaje_atbash(id_destinatario, id_usuario, oracion)
+    else:
+        messagebox.showerror("Error", "Destinatario inexistente")
+
+
+def enviar_mensaje_cesar(destinatario, id_usuario, oracion, clave):
+    """
+    Joaquin Osorio: Funcion que guarda los datos en un archivo.csv.
+    """
+        
+    if clave.isnumeric():
+        mensaje = cifrar_string(oracion, clave)
+        cifrado_mas_clave = 'C' + clave
+
+        with open(ARCHIVO_MENSAJES, "a") as archivo_mensaje:
+            archivo_mensaje.write(f'{destinatario},{id_usuario},{cifrado_mas_clave},{mensaje}\n')
+
+        messagebox.showinfo("Éxito", "Envio exitoso")
+    
+    else:
+        messagebox.showerror("Error", "Coloque una clave numerica")
+
+
+def enviar_mensaje_atbash(destinatario, id_usuario, oracion):
+    """
+    Joaquin Osorio: Funcion que guarda los datos en un archivo.csv.
+    """
+    
+    if oracion:
+        mensaje = cifrado_atbash(oracion)
+
+        with open(ARCHIVO_MENSAJES, "a") as archivo_mensaje:
+            archivo_mensaje.write(f'{destinatario},{id_usuario},A,{mensaje}\n')
 
             messagebox.showinfo("Éxito", "Envio exitoso")
-

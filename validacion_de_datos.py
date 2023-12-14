@@ -157,8 +157,8 @@ def validar_registro_usuario(id_usuario, clave_usuario, id_pregunta, respuesta_r
 
 def buscar_usuario(id_usuario):
     """
-    Realiza una búsqueda secuencial en el archivo de usuarios para verificar si el identificador está en uso.
-    Retorna True si el identificador no está en uso, y False si ya está en uso.
+    Martin Ferreyra: Devuelve un usuario si lo encuentra o False
+    en caso contrario.
     """
     with open('./archivos csv/usuarios.csv', 'r') as file:
         reader = csv.reader(file)
@@ -166,6 +166,25 @@ def buscar_usuario(id_usuario):
         while row and row[0] != id_usuario:
             row = next(reader, False)
     return row
+
+
+def checkear_bloqueo(id_usuario):
+    """
+    Martin Ferreyra: Funcion que lee el archivo de intentos de recuperacion
+    y devuelve True o False en funcion de si el usuario esta bloqueado o no.
+    """
+
+    bloqueo = False
+        
+    with open("./archivos csv/recuperacion.csv", "r") as file:
+        reader = csv.reader(file)
+
+        for row in reader:
+            if row and row[0] == id_usuario:
+                if int(row[1]) > 2:
+                    bloqueo = True
+
+    return bloqueo
 
 
 def guardar_nuevo_registro(id_usuario, clave_usuario, id_pregunta, respuesta_recuperacion):
@@ -207,25 +226,6 @@ def solicitar_clave():
             print("Clave válida. ¡Bienvenido!")
         else:
             print("Clave no válida. Asegúrese de cumplir con los requisitos.")
-
-
-def checkear_bloqueo(id_usuario):
-    """
-    Martin Ferreyra: Funcion que lee el archivo de intentos de recuperacion
-    y devuelve True o False en funcion de si el usuario esta bloqueado o no.
-    """
-
-    bloqueo = False
-        
-    with open("./archivos csv/recuperacion.csv", "r") as file:
-        reader = csv.reader(file)
-
-        for row in reader:
-            if row and row[0] == id_usuario:
-                if int(row[1]) > 2:
-                    bloqueo = True
-
-    return bloqueo
 
 
 def main():
