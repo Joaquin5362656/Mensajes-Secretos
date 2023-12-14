@@ -25,8 +25,6 @@ def consultar_mensajes_recibidos(usuario):
     """
     Jennifer Mota: Funcion que recibe el usuario, verifica si el mensaje es para todos
     o para un usuario particular y si es cifrado Atbash o Cesar. De esa manera devuelve
-    los mensajes recibidos decifrados y la cantidad de mensajes recibidos.
-    o para un usuario particular y si es cifrado Atbash o Cesar. De esa manera se obtiene
     los mensajes recibidos decifrados y la cantidad de mensajes recibidos para poder mostrarlos en la interfaz.
     """
 
